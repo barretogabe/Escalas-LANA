@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medida de Independência Funcional</title>
+    <title>Medida de Independência Funcional (MIF)</title>
     <style>
         :root {
             --primary: #1a2a6c;
             --secondary: #b21f1f;
-            --accent: #e74c3c;
+            --accent: #f39c12;
             --light: #ecf0f1;
             --dark: #2c3e50;
             --success: #27ae60;
-            --warning: #f39c12;
-            --motor: #3a5ccc; /* Cor mais clara para melhor contraste */
-            --cognitive: #b21f1f;
+            --warning: #f1c40f;
         }
         
         * {
@@ -79,26 +77,6 @@
             color: var(--primary);
         }
         
-        .manual-link {
-            font-size: 1.1rem;
-            margin-top: 15px;
-            display: inline-block;
-            background: #f8f9fa;
-            padding: 10px 20px;
-            border-radius: 30px;
-            color: var(--secondary);
-            text-decoration: none;
-            border: 1px solid var(--secondary);
-            transition: all 0.3s;
-        }
-        
-        .manual-link:hover {
-            background: var(--secondary);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(178, 31, 31, 0.3);
-        }
-        
         .form-intro {
             padding: 25px;
             background: var(--light);
@@ -130,11 +108,6 @@
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s;
-        }
-        
-        .form-group input:disabled, .form-group select:disabled {
-            background: #f5f5f5;
-            color: #555;
         }
         
         .section {
@@ -174,7 +147,7 @@
             text-align: center;
         }
         
-        .subsection {
+        .question {
             margin-bottom: 25px;
             padding: 20px;
             background: #f9f9f9;
@@ -183,55 +156,17 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
-        .subsection-title {
+        .question-text {
             font-size: 1.25rem;
             font-weight: bold;
-            margin-bottom: 20px;
-            color: var(--dark);
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-        }
-        
-        .subsection-description {
-            background: #e8f4ff;
-            padding: 15px;
-            border-radius: 8px;
             margin-bottom: 15px;
-            font-size: 0.95rem;
-            border-left: 4px solid var(--secondary);
-        }
-        
-        .question {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-            border: 1px solid #eee;
-            transition: all 0.3s ease;
-        }
-        
-        .motor-item {
-            border-left: 5px solid var(--motor);
-            background-color: rgba(58, 92, 204, 0.05);
-        }
-        
-        .cognitive-item {
-            border-left: 5px solid var(--cognitive);
-            background-color: rgba(178, 31, 31, 0.05);
-        }
-        
-        .question-text {
-            margin-bottom: 15px;
-            font-weight: 600;
-            font-size: 1.05rem;
             color: var(--dark);
         }
         
         .options {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            flex-direction: column;
+            gap: 10px;
         }
         
         .option {
@@ -239,22 +174,19 @@
             align-items: center;
             padding: 12px 20px;
             background: #f0f4f8;
-            border-radius: 30px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid #ddd;
-            flex: 1;
-            min-width: 200px;
         }
         
         .option:hover {
             background: #e3eaf3;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateX(5px);
         }
         
         .option input[type="radio"] {
-            margin-right: 10px;
+            margin-right: 15px;
             transform: scale(1.2);
         }
         
@@ -265,14 +197,9 @@
             box-shadow: 0 4px 12px rgba(178, 31, 31, 0.3);
         }
         
-        .disabled-section {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        
         .totals-section {
             padding: 30px;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border-radius: 15px;
             margin: 30px;
@@ -281,7 +208,7 @@
         
         .totals-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
         
@@ -292,16 +219,10 @@
             text-align: center;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s;
-        }
-        
-        .total-item:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
         }
         
         .total-label {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             margin-bottom: 10px;
         }
@@ -319,7 +240,7 @@
         
         .total-ad {
             background: rgba(39, 174, 96, 0.2);
-            grid-column: span 2;
+            grid-column: 1 / -1;
         }
         
         .buttons {
@@ -344,104 +265,9 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background: #219653;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(33, 150, 83, 0.4);
-        }
-        
-        .btn-reset {
-            background: var(--accent);
-            color: white;
-        }
-        
-        .btn-reset:hover {
-            background: #c0392b;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(192, 57, 43, 0.4);
-        }
-        
-        .btn-table {
-            background: #2980b9;
-            color: white;
-        }
-        
-        .btn-table:hover {
-            background: #2573a7;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(37, 115, 167, 0.4);
-        }
-        
-        footer {
-            text-align: center;
-            padding: 25px;
-            color: white;
-            background: var(--primary);
-            font-size: 1rem;
-        }
-        
-        .references {
-            max-width: 800px;
-            margin: 20px auto 0;
-            text-align: left;
-            font-size: 0.85rem;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-        }
-        
-        .references h4 {
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .references p {
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-        
-        @media (max-width: 768px) {
-            .options {
-                flex-direction: column;
-            }
-            
-            .option {
-                width: 100%;
-            }
-            
-            .totals-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .total-ad {
-                grid-column: span 1;
-            }
-            
-            .section-header {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-            
-            .buttons {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .legend-table th, .legend-table td {
-                padding: 8px;
-                font-size: 0.9rem;
-            }
-        }
+        .btn-success { background: var(--success); color: white; }
+        .btn-reset { background: var(--secondary); color: white; }
+        .btn-table { background: var(--dark); color: white; }
         
         .progress-container {
             height: 8px;
@@ -459,15 +285,6 @@
             transition: width 0.5s ease;
         }
         
-        .conditional-note {
-            background: #fff8e1;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--warning);
-            margin: 15px 0;
-            font-weight: 500;
-        }
-        
         .export-status {
             text-align: center;
             padding: 15px;
@@ -477,235 +294,15 @@
             display: none;
         }
         
-        .export-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+        .export-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .export-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         
-        .export-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        /* Estilos para a tabela de visualização */
-        .data-table-container {
-            display: none;
-            margin: 0 30px 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-        
-        .data-table-container h3 {
+        footer {
             text-align: center;
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-        
-        .data-table th {
-            background-color: var(--secondary);
+            padding: 25px;
             color: white;
-            padding: 12px 15px;
-            text-align: center;
-            position: sticky;
-            left: 0;
-            white-space: nowrap;
-        }
-        
-        .data-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            text-align: center;
-            white-space: nowrap;
-        }
-        
-        .data-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        .data-table tr:hover {
-            background-color: #f1f7fd;
-        }
-        
-        .copy-instructions {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #666;
-            font-style: italic;
-        }
-        
-        .table-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .copy-btn {
-            background: #2980b9;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        
-        .copy-btn:hover {
-            background: #1d6fa5;
-        }
-        
-        .copy-success {
-            background: #27ae60;
-        }
-        
-        @media (max-width: 768px) {
-            .data-table-container {
-                overflow-x: auto;
-            }
-            
-            .data-table {
-                font-size: 0.85rem;
-            }
-        }
-        
-        .instruction-note {
-            background: #f0f8ff;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #3498db;
-            margin: 15px 0;
-            font-size: 0.95rem;
-        }
-        
-        .mif-legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-        }
-        
-        .legend-motor {
-            background: var(--motor);
-        }
-        
-        .legend-cognitive {
-            background: var(--cognitive);
-        }
-        
-        .motor-label {
-            display: inline-block;
-            padding: 2px 8px;
-            background-color: rgba(58, 92, 204, 0.1);
-            border-radius: 4px;
-            color: var(--motor);
-            font-weight: bold;
-        }
-        
-        .cognitive-label {
-            display: inline-block;
-            padding: 2px 8px;
-            background-color: rgba(178, 31, 31, 0.1);
-            border-radius: 4px;
-            color: var(--cognitive);
-            font-weight: bold;
-        }
-        
-        /* Estilos para a legenda */
-        .legend-container {
-            margin: 20px auto;
-            max-width: 800px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        
-        .legend-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .legend-table th, .legend-table td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        
-        .legend-table th {
-            background-color: var(--primary);
-            color: white;
-            text-align: center;
-        }
-        
-        .legend-table tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        .no-assistance {
-            background-color: rgba(39, 174, 96, 0.2);
-            font-weight: bold;
-            text-align: center;
-        }
-        
-        .modified-dependence {
-            background-color: rgba(241, 196, 15, 0.2);
-        }
-        
-        .with-assistance {
-            background-color: rgba(52, 152, 219, 0.2);
-            font-weight: bold;
-            text-align: center;
-        }
-        
-        .complete-dependence {
-            background-color: rgba(231, 76, 60, 0.2);
-        }
-        
-        .independence-group {
-            font-weight: bold;
-            padding: 10px 15px;
-        }
-        
-        .independence-item {
-            padding: 8px 15px 8px 30px;
-        }
-        
-        .table-responsive {
-            overflow-x: auto;
+            background: var(--primary);
+            font-size: 1rem;
         }
     </style>
 </head>
@@ -714,765 +311,203 @@
         <header>
             <div class="header-content">
                 <div class="logo-container">
-                    <div class="logo">
-                        Laboratório de Neurociência Aplicada
-                    </div>
+                    <div class="logo">Laboratório de Neurociência Aplicada</div>
                 </div>
                 <h1>Medida de Independência Funcional (MIF)</h1>
-                <a href="https://doi.org/10.5935/0104-7795.20040003" target="_blank" class="manual-link">
-                    Manual da escala: https://doi.org/10.5935/0104-7795.20040003
-                </a>
             </div>
         </header>
         
-        <!-- Legenda de pontuação -->
-        <div class="legend-container">
-            <h3 style="text-align: center; margin: 0 0 15px; color: var(--primary);">Legenda de Pontuação da MIF</h3>
-            <div class="table-responsive">
-                <table class="legend-table">
-                    <thead>
-                        <tr>
-                            <th width="75%">Nível de Independência</th>
-                            <th width="25%">Categoria</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Grupo Independente -->
-                        <tr>
-                            <td class="independence-group no-assistance">Independente</td>
-                            <td rowspan="3" class="no-assistance">SEM<br>ASSISTÊNCIA</td>
-                        </tr>
-                        <tr>
-                            <td class="independence-item">7 – Independência completa (Com segurança e tempo normal)</td>
-                        </tr>
-                        <tr>
-                            <td class="independence-item">6 – Independência modificada (Ajuda técnica)</td>
-                        </tr>
-                        
-                        <!-- Grupo Dependência Modificada -->
-                        <tr>
-                            <td class="independence-group modified-dependence">Dependência Modificada</td>
-                            <td rowspan="4" class="with-assistance">COM<br>ASSISTÊNCIA</td>
-                        </tr>
-                        <tr>
-                            <td class="independence-item modified-dependence">5 – Supervisão</td>
-                        </tr>
-                        <tr>
-                            <td class="independence-item modified-dependence">4 – Assistência Mínima (Sujeito ≥ 75%)</td>
-                        </tr>
-                        <tr>
-                            <td class="independence-item modified-dependence">3 – Assistência Moderada (Sujeito ≥ 50%)</td>
-                        </tr>
-                        
-                        <!-- Grupo Dependência Completa -->
-                        <tr>
-                            <td class="independence-group complete-dependence">Dependência Completa</td>
-                            <td rowspan="3" class="with-assistance">COM<br>ASSISTÊNCIA</td>
-                        </tr>
-                        <tr>
-                            <td class="independence-item complete-dependence">2 – Assistência Máxima (Sujeito ≥ 25%)</td>
-                        </tr>
-                        <tr>
-                            <td class="independence-item complete-dependence">1 – Assistência Total (Sujeito ≥ 10%)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
         <div class="form-intro">
-            <h2 style="color: var(--primary); margin-bottom: 20px; text-align: center;">
-                Dados do Paciente
-            </h2>
-            
+            <h2 style="color: var(--primary); margin-bottom: 20px; text-align: center;">Dados do Paciente</h2>
             <div class="patient-info">
                 <div class="form-group">
                     <label for="patientId">Identificação:</label>
                     <input type="text" id="patientId" required placeholder="Número de identificação">
                 </div>
-                
                 <div class="form-group">
                     <label for="patientName">Nome do Paciente:</label>
                     <input type="text" id="patientName" required placeholder="Digite o nome completo">
                 </div>
-                
                 <div class="form-group">
                     <label for="evaluationMoment">Momento da avaliação:</label>
                     <input type="text" id="evaluationMoment" required placeholder="Ex: T0, T1, T2...">
                 </div>
             </div>
-            
             <div class="patient-info">
                 <div class="form-group">
                     <label for="evaluator">Avaliador:</label>
                     <input type="text" id="evaluator" required placeholder="Nome do avaliador">
                 </div>
-                
                 <div class="form-group">
                     <label for="evaluationDate">Data da Avaliação:</label>
                     <input type="date" id="evaluationDate" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="evaluationTime">Horário:</label>
                     <input type="time" id="evaluationTime" required>
                 </div>
             </div>
-            
-            <div class="instruction-note">
-                <strong>Instrução:</strong> Avalie cada item e atribua uma pontuação de 1 a 7 de acordo com o nível de independência do paciente. 
-                Não deixe nenhum item em branco - se não for possível testar, marque 1 (Assistência Total).
-            </div>
-            
-            <div class="mif-legend">
-                <div class="legend-item">
-                    <div class="legend-color legend-motor"></div>
-                    <div>Item Motor</div>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color legend-cognitive"></div>
-                    <div>Item Cognitivo</div>
-                </div>
-            </div>
-            
             <div class="progress-container">
                 <div class="progress-bar" id="formProgress"></div>
             </div>
         </div>
-        
-        <!-- Seção: Autocuidado -->
-        <div class="section" id="sectionSelfCare">
+
+        <div class="section" id="sectionCuidados">
             <div class="section-header">
-                <div class="section-title">Autocuidado <span class="motor-label">MOTOR</span></div>
-                <div class="section-score">Pontuação: <span id="scoreSelfCare">0</span>/42</div>
+                <div class="section-title">Cuidados Pessoais</div>
+                <div class="section-score">Pontuação: <span id="scoreCuidados">0</span>/42</div>
             </div>
-            
-            <div class="subsection">
-                <div class="question motor-item">
-                    <div class="question-text">A. Alimentação</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_A" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_A" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_A" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_A" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_A" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_A" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_A" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">B. Higiene pessoal: apresentação e aparência</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_B" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_B" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_B" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_B" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_B" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_B" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_B" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">C. Banho: lavar o corpo</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_C" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_C" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_C" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_C" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_C" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_C" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_C" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">D. Vestir: metade superior do corpo</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_D" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_D" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_D" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_D" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_D" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_D" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_D" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">E. Vestir: metade inferior do corpo</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_E" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_E" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_E" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_E" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_E" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_E" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_E" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">F. Utilização do vaso sanitário</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_F" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_F" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_F" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_F" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_F" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_F" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_F" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-            </div>
+
+            <script>
+                const cuidadosItems = [
+                    { id: 'A', name: 'A_Alimentacao', label: 'A. Alimentação' },
+                    { id: 'B', name: 'B_HigienePessoal', label: 'B. Higiene Pessoal' },
+                    { id: 'C', name: 'C_Banho', label: 'C. Banho' },
+                    { id: 'D', name: 'D_VestirSuperior', label: 'D. Vestir Metade Superior' },
+                    { id: 'E', name: 'E_VestirInferior', label: 'E. Vestir Metade Inferior' },
+                    { id: 'F', name: 'F_UsoVaso', label: 'F. Uso do Vaso Sanitário' }
+                ];
+
+                const scoreOptions = [
+                    { value: 7, text: '7 - Independência Completa (Segurança)' },
+                    { value: 6, text: '6 - Independência Modificada (Uso de dispositivo/Tempo maior)' },
+                    { value: 5, text: '5 - Supervisão ou Preparação' },
+                    { value: 4, text: '4 - Assistência Mínima (Paciente realiza 75% ou mais)' },
+                    { value: 3, text: '3 - Assistência Moderada (Paciente realiza 50% a 74%)' },
+                    { value: 2, text: '2 - Assistência Máxima (Paciente realiza 25% a 49%)' },
+                    { value: 1, text: '1 - Assistência Total (Paciente realiza menos de 25%)' }
+                ];
+
+                function renderQuestions(items, sectionClass) {
+                    items.forEach(item => {
+                        document.write(`
+                            <div class="question">
+                                <div class="question-text">${item.label}</div>
+                                <div class="options">
+                                    ${scoreOptions.map(opt => `
+                                        <label class="option">
+                                            <input type="radio" name="${item.name}" value="${opt.value}" class="${sectionClass}"> ${opt.text}
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `);
+                    });
+                }
+                renderQuestions(cuidadosItems, 'calc-cuidados');
+            </script>
         </div>
 
-        <!-- Seção: Controle dos Esfíncteres -->
-        <div class="section" id="sectionSphincter">
+        <div class="section" id="sectionEsfincteres">
             <div class="section-header">
-                <div class="section-title">Controle dos Esfíncteres <span class="motor-label">MOTOR</span></div>
-                <div class="section-score">Pontuação: <span id="scoreSphincter">0</span>/14</div>
+                <div class="section-title">Controle Esfincteriano</div>
+                <div class="section-score">Pontuação: <span id="scoreEsfincteres">0</span>/14</div>
             </div>
-            
-            <div class="subsection">
-                <div class="question motor-item">
-                    <div class="question-text">G. Controle da urina: frequência de incontinência</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_G" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_G" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_G" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_G" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_G" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_G" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_G" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">H. Controle das fezes</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_H" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_H" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_H" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_H" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_H" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_H" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_H" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <script>
+                renderQuestions([
+                    { id: 'G', name: 'G_Urina', label: 'G. Controle da Urina' },
+                    { id: 'H', name: 'H_Fezes', label: 'H. Controle das Fezes' }
+                ], 'calc-esfincteres');
+            </script>
         </div>
 
-        <!-- Seção: Mobilidade -->
-        <div class="section" id="sectionMobility">
+        <div class="section" id="sectionTransferencias">
             <div class="section-header">
-                <div class="section-title">Mobilidade <span class="motor-label">MOTOR</span></div>
-                <div class="section-score">Pontuação: <span id="scoreMobility">0</span>/21</div>
+                <div class="section-title">Transferências</div>
+                <div class="section-score">Pontuação: <span id="scoreTransferencias">0</span>/21</div>
             </div>
-            
-            <div class="subsection">
-                <div class="question motor-item">
-                    <div class="question-text">I. Transferências: leito, cadeira, cadeira de rodas</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_I" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_I" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_I" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_I" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_I" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_I" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_I" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">J. Transferências: vaso sanitário</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_J" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_J" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_J" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_J" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_J" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_J" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_J" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">K. Transferências: banheira ou chuveiro</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_K" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_K" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_K" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_K" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_K" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_K" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_K" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <script>
+                renderQuestions([
+                    { id: 'I', name: 'I_LeitoCadeira', label: 'I. Leito, Cadeira, Cadeira de Rodas' },
+                    { id: 'J', name: 'J_Vaso', label: 'J. Vaso Sanitário' },
+                    { id: 'K', name: 'K_BanheiraChuveiro', label: 'K. Banheira ou Chuveiro' }
+                ], 'calc-transferencias');
+            </script>
         </div>
 
-        <!-- Seção: Locomoção -->
-        <div class="section" id="sectionLocomotion">
+        <div class="section" id="sectionLocomocao">
             <div class="section-header">
-                <div class="section-title">Locomoção <span class="motor-label">MOTOR</span></div>
-                <div class="section-score">Pontuação: <span id="scoreLocomotion">0</span>/14</div>
+                <div class="section-title">Locomoção</div>
+                <div class="section-score">Pontuação: <span id="scoreLocomocao">0</span>/14</div>
             </div>
-            
-            <div class="subsection">
-                <div class="question motor-item">
-                    <div class="question-text">L. Marcha/Cadeira de rodas</div>
-                    <div class="form-group">
-                        <label for="locomotionMode">Modo de locomoção:</label>
-                        <select id="locomotionMode" required>
-                            <option value="">Selecione...</option>
-                            <option value="Marcha">Marcha</option>
-                            <option value="Cadeira de Rodas">Cadeira de Rodas</option>
-                        </select>
-                    </div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_L" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_L" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_L" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_L" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_L" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_L" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_L" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question motor-item">
-                    <div class="question-text">M. Escadas</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_M" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_M" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_M" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_M" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_M" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_M" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_M" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <script>
+                renderQuestions([
+                    { id: 'L', name: 'L_MarchaCadeira', label: 'L. Marcha/Cadeira de Rodas' },
+                    { id: 'M', name: 'M_Escadas', label: 'M. Escadas' }
+                ], 'calc-locomocao');
+            </script>
         </div>
 
-        <!-- Seção: Comunicação -->
-        <div class="section" id="sectionCommunication">
+        <div class="section" id="sectionComunicacao">
             <div class="section-header">
-                <div class="section-title">Comunicação <span class="cognitive-label">COGNITIVO</span></div>
-                <div class="section-score">Pontuação: <span id="scoreCommunication">0</span>/14</div>
+                <div class="section-title">Comunicação</div>
+                <div class="section-score">Pontuação: <span id="scoreComunicacao">0</span>/14</div>
             </div>
-            
-            <div class="subsection">
-                <div class="question cognitive-item">
-                    <div class="question-text">N. Compreensão</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_N" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_N" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_N" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_N" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_N" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_N" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_N" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question cognitive-item">
-                    <div class="question-text">O. Expressão</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_O" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_O" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_O" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_O" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_O" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_O" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_O" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <script>
+                renderQuestions([
+                    { id: 'N', name: 'N_Compreensao', label: 'N. Compreensão' },
+                    { id: 'O', name: 'O_Expressao', label: 'O. Expressão' }
+                ], 'calc-comunicacao');
+            </script>
         </div>
 
-        <!-- Seção: Conhecimento Social -->
-        <div class="section" id="sectionSocial">
+        <div class="section" id="sectionCognicao">
             <div class="section-header">
-                <div class="section-title">Conhecimento Social <span class="cognitive-label">COGNITIVO</span></div>
-                <div class="section-score">Pontuação: <span id="scoreSocial">0</span>/21</div>
+                <div class="section-title">Cognição Social</div>
+                <div class="section-score">Pontuação: <span id="scoreCognicao">0</span>/21</div>
             </div>
-            
-            <div class="subsection">
-                <div class="question cognitive-item">
-                    <div class="question-text">P. Interação Social</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_P" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_P" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_P" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_P" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_P" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_P" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_P" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question cognitive-item">
-                    <div class="question-text">Q. Resolução de Problemas</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_Q" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_Q" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_Q" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_Q" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_Q" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_Q" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_Q" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="question cognitive-item">
-                    <div class="question-text">R. Memória</div>
-                    <div class="options">
-                        <label class="option">
-                            <input type="radio" name="MIF_R" value="1" required> 1 - Assistência Total
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_R" value="2"> 2 - Assistência Máxima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_R" value="3"> 3 - Assistência Moderada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_R" value="4"> 4 - Assistência Mínima
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_R" value="5"> 5 - Supervisão
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_R" value="6"> 6 - Independência Modificada
-                        </label>
-                        <label class="option">
-                            <input type="radio" name="MIF_R" value="7"> 7 - Independência Completa
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <script>
+                renderQuestions([
+                    { id: 'P', name: 'P_InteracaoSocial', label: 'P. Interação Social' },
+                    { id: 'Q', name: 'Q_ResolucaoProblemas', label: 'Q. Resolução de Problemas' },
+                    { id: 'R', name: 'R_Memoria', label: 'R. Memória' }
+                ], 'calc-cognicao');
+            </script>
         </div>
 
-        <!-- Seção de Totais -->
         <div class="totals-section">
-            <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">
-                Pontuação Total
-            </h2>
-            
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">Pontuação Total</h2>
             <div class="totals-grid">
                 <div class="total-item">
-                    <div class="total-label">Total Geral</div>
-                    <div class="total-value" id="totalGeral">0</div>
-                    <div class="total-max">/ 126</div>
-                </div>
-                
-                <div class="total-item">
-                    <div class="total-label">Motor (A-M)</div>
+                    <div class="total-label">Escore Motor (A-M)</div>
                     <div class="total-value" id="totalMotor">0</div>
                     <div class="total-max">/ 91</div>
                 </div>
-                
                 <div class="total-item">
-                    <div class="total-label">Cognitivo (N-R)</div>
-                    <div class="total-value" id="totalCognitive">0</div>
+                    <div class="total-label">Escore Cognitivo (N-R)</div>
+                    <div class="total-value" id="totalCognitivo">0</div>
                     <div class="total-max">/ 35</div>
+                </div>
+                <div class="total-item total-ad">
+                    <div class="total-label">MIF TOTAL</div>
+                    <div class="total-value" id="totalGeral">0</div>
+                    <div class="total-max">/ 126</div>
                 </div>
             </div>
         </div>
 
-        <!-- Status de Exportação -->
         <div class="export-status" id="exportStatus"></div>
 
-        <!-- Botões -->
         <div class="buttons">
+            <button class="btn" onclick="sendToSheets()" id="btnSubmit" style="background: #8e44ad; color: white;">
+                ☁️ Salvar na Planilha
+            </button>
             <button class="btn btn-success" onclick="exportData()">
                 💾 Baixar CSV
-            </button>
-            <button class="btn btn-table" onclick="showTable()">
-                📊 Mostrar Tabela
             </button>
             <button class="btn btn-reset" onclick="resetForm()">
                 🔄 Limpar Formulário
             </button>
         </div>
-
-        <!-- Tabela de visualização de dados -->
-        <div class="data-table-container" id="dataTableContainer">
-            <h3>Dados da Avaliação MIF</h3>
-            <div class="table-responsive">
-                <table class="data-table" id="dataTable">
-                    <thead id="dataTableHeader">
-                        <!-- Cabeçalhos serão inseridos aqui via JavaScript -->
-                    </thead>
-                    <tbody id="dataTableBody">
-                        <!-- Valores serão inseridos aqui via JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="copy-instructions">
-                Selecione e copie os dados para colar em uma planilha
-            </div>
-            
-            <!-- Botões para tabela -->
-            <div class="table-buttons">
-                <button class="copy-btn" onclick="copyTableData()">
-                    📋 Copiar Valores
-                </button>
-            </div>
-        </div>
     </div>
 
     <footer>
-        <p>&copy; 2025 Laboratório de Neurociência Aplicada - Medida de Independência Funcional</p>
-        <div class="references">
-            <p>Riberto, M., Miyazaki, M. H., Jucá, S. S. H., Sakamoto, H., Pinto, P. P. N., & Battistella, L. R. (2004). Validação da versão brasileira da Medida de Independência Funcional. Acta fisiátrica, 11(2), 72-76.</p>
-        </div>
+        <p>&copy; 2026 Laboratório de Neurociência Aplicada - MIF</p>
     </footer>
+
     <script>
-        // Mapeamento completo dos campos para exportação
+        // Configuração de exportação
         const EXPORT_FIELDS = [
-            // Dados do paciente (ID primeiro, depois nome)
             {id: 'patientId', label: 'Identificação'},
             {id: 'patientName', label: 'Nome do Paciente'},
             {id: 'evaluationMoment', label: 'Momento da avaliação'},
@@ -1480,38 +515,37 @@
             {id: 'evaluationDate', label: 'Data da Avaliação'},
             {id: 'evaluationTime', label: 'Horário'},
             
-            // Itens MIF
-            {name: 'MIF_A', label: 'A. Alimentação'},
-            {name: 'MIF_B', label: 'B. Higiene pessoal'},
-            {name: 'MIF_C', label: 'C. Banho'},
-            {name: 'MIF_D', label: 'D. Vestir superior'},
-            {name: 'MIF_E', label: 'E. Vestir inferior'},
-            {name: 'MIF_F', label: 'F. Uso do vaso'},
-            {name: 'MIF_G', label: 'G. Controle urina'},
-            {name: 'MIF_H', label: 'H. Controle fezes'},
-            {name: 'MIF_I', label: 'I. Transferências leito'},
-            {name: 'MIF_J', label: 'J. Transferências vaso'},
-            {name: 'MIF_K', label: 'K. Transferências banho'},
-            {id: 'locomotionMode', label: 'L. Modo de locomoção'},
-            {name: 'MIF_L', label: 'L. Locomoção'},
-            {name: 'MIF_M', label: 'M. Escadas'},
-            {name: 'MIF_N', label: 'N. Compreensão'},
-            {name: 'MIF_O', label: 'O. Expressão'},
-            {name: 'MIF_P', label: 'P. Interação Social'},
-            {name: 'MIF_Q', label: 'Q. Resolução de Problemas'},
-            {name: 'MIF_R', label: 'R. Memória'},
+            {name: 'A_Alimentacao', label: 'A. Alimentação'},
+            {name: 'B_HigienePessoal', label: 'B. Higiene Pessoal'},
+            {name: 'C_Banho', label: 'C. Banho'},
+            {name: 'D_VestirSuperior', label: 'D. Vestir Superior'},
+            {name: 'E_VestirInferior', label: 'E. Vestir Inferior'},
+            {name: 'F_UsoVaso', label: 'F. Uso do Vaso'},
             
-            // Totais
-            {id: 'totalGeral', label: 'Total Geral', isTextContent: true},
-            {id: 'totalMotor', label: 'Total Motor', isTextContent: true},
-            {id: 'totalCognitive', label: 'Total Cognitivo', isTextContent: true}
+            {name: 'G_Urina', label: 'G. Controle da Urina'},
+            {name: 'H_Fezes', label: 'H. Controle das Fezes'},
+            
+            {name: 'I_LeitoCadeira', label: 'I. Transf. Leito/Cadeira'},
+            {name: 'J_Vaso', label: 'J. Transf. Vaso'},
+            {name: 'K_BanheiraChuveiro', label: 'K. Transf. Chuveiro'},
+            
+            {name: 'L_MarchaCadeira', label: 'L. Marcha/Cadeira'},
+            {name: 'M_Escadas', label: 'M. Escadas'},
+            
+            {name: 'N_Compreensao', label: 'N. Compreensão'},
+            {name: 'O_Expressao', label: 'O. Expressão'},
+            
+            {name: 'P_InteracaoSocial', label: 'P. Interação Social'},
+            {name: 'Q_ResolucaoProblemas', label: 'Q. Resolução Problemas'},
+            {name: 'R_Memoria', label: 'R. Memória'},
+            
+            {id: 'totalMotor', label: 'Escore Motor', isTextContent: true},
+            {id: 'totalCognitivo', label: 'Escore Cognitivo', isTextContent: true},
+            {id: 'totalGeral', label: 'Escore Total MIF', isTextContent: true}
         ];
 
-        // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            // Adicionar event listeners para todos os radio buttons
-            const radioButtons = document.querySelectorAll('input[type="radio"]');
-            radioButtons.forEach(radio => {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     updateScores();
                     updateProgress();
@@ -1519,325 +553,171 @@
                 });
             });
 
-            // Adicionar event listeners para campos de texto
-            const textInputs = document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], select');
-            textInputs.forEach(input => {
+            document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]').forEach(input => {
                 input.addEventListener('input', updateProgress);
             });
 
-            // Definir data atual
             document.getElementById('evaluationDate').valueAsDate = new Date();
-            
-            // Definir horário atual
             const now = new Date();
-            const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
-                             now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('evaluationTime').value = timeString;
+            document.getElementById('evaluationTime').value = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
             updateScores();
             updateProgress();
-            updateSelectedOptions(); // Atualizar estilização inicial
         });
 
         function updateSelectedOptions() {
-            // Remove selected class from all options
-            document.querySelectorAll('.option').forEach(option => {
-                option.classList.remove('selected');
-            });
-
-            // Add selected class to checked options
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
             document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
                 radio.closest('.option').classList.add('selected');
             });
         }
 
+        function calculateSectionScore(className) {
+            let score = 0;
+            document.querySelectorAll(`input.${className}:checked`).forEach(radio => {
+                score += parseInt(radio.value);
+            });
+            return score;
+        }
+
         function updateScores() {
-            // Calcular pontuação das seções
-            let scoreSelfCare = 0;
-            let scoreSphincter = 0;
-            let scoreMobility = 0;
-            let scoreLocomotion = 0;
-            let scoreCommunication = 0;
-            let scoreSocial = 0;
-            
-            const motorItems = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
-            const cognitiveItems = ['N', 'O', 'P', 'Q', 'R'];
-            
-            let totalMotor = 0;
-            let totalCognitive = 0;
-            
-            // Calcular totais por seção e totais gerais
-            for (let item of motorItems) {
-                const selected = document.querySelector(`input[name="MIF_${item}"]:checked`);
-                if (selected) {
-                    const value = parseInt(selected.value);
-                    
-                    // Adicionar aos totais da seção
-                    if (['A','B','C','D','E','F'].includes(item)) scoreSelfCare += value;
-                    if (['G','H'].includes(item)) scoreSphincter += value;
-                    if (['I','J','K'].includes(item)) scoreMobility += value;
-                    if (['L','M'].includes(item)) scoreLocomotion += value;
-                    
-                    totalMotor += value;
-                }
-            }
-            
-            for (let item of cognitiveItems) {
-                const selected = document.querySelector(`input[name="MIF_${item}"]:checked`);
-                if (selected) {
-                    const value = parseInt(selected.value);
-                    
-                    // Adicionar aos totais da seção
-                    if (['N','O'].includes(item)) scoreCommunication += value;
-                    if (['P','Q','R'].includes(item)) scoreSocial += value;
-                    
-                    totalCognitive += value;
-                }
-            }
-            
-            const totalGeral = totalMotor + totalCognitive;
+            const scCuidados = calculateSectionScore('calc-cuidados');
+            const scEsfincteres = calculateSectionScore('calc-esfincteres');
+            const scTransf = calculateSectionScore('calc-transferencias');
+            const scLocomocao = calculateSectionScore('calc-locomocao');
+            const scComunicacao = calculateSectionScore('calc-comunicacao');
+            const scCognicao = calculateSectionScore('calc-cognicao');
 
-            // Atualizar displays
-            document.getElementById('scoreSelfCare').textContent = scoreSelfCare;
-            document.getElementById('scoreSphincter').textContent = scoreSphincter;
-            document.getElementById('scoreMobility').textContent = scoreMobility;
-            document.getElementById('scoreLocomotion').textContent = scoreLocomotion;
-            document.getElementById('scoreCommunication').textContent = scoreCommunication;
-            document.getElementById('scoreSocial').textContent = scoreSocial;
+            document.getElementById('scoreCuidados').textContent = scCuidados;
+            document.getElementById('scoreEsfincteres').textContent = scEsfincteres;
+            document.getElementById('scoreTransferencias').textContent = scTransf;
+            document.getElementById('scoreLocomocao').textContent = scLocomocao;
+            document.getElementById('scoreComunicacao').textContent = scComunicacao;
+            document.getElementById('scoreCognicao').textContent = scCognicao;
 
-            document.getElementById('totalGeral').textContent = totalGeral;
+            const totalMotor = scCuidados + scEsfincteres + scTransf + scLocomocao;
+            const totalCognitivo = scComunicacao + scCognicao;
+
             document.getElementById('totalMotor').textContent = totalMotor;
-            document.getElementById('totalCognitive').textContent = totalCognitive;
+            document.getElementById('totalCognitivo').textContent = totalCognitivo;
+            document.getElementById('totalGeral').textContent = totalMotor + totalCognitivo;
         }
 
         function updateProgress() {
-            const totalFields = getTotalRequiredFields();
-            const filledFields = getFilledRequiredFields();
-            const progress = (filledFields / totalFields) * 100;
-            document.getElementById('formProgress').style.width = progress + '%';
-        }
-
-        function getTotalRequiredFields() {
-            // Contar campos de texto obrigatórios
-            const textFields = document.querySelectorAll('input[required], select[required]').length;
-            
-            // Contar grupos de radio buttons (excluindo os desabilitados)
-            const radioGroups = new Set();
-            document.querySelectorAll('input[type="radio"]:not([disabled])').forEach(radio => {
-                radioGroups.add(radio.name);
-            });
-            
-            return textFields + radioGroups.size;
-        }
-
-        function getFilledRequiredFields() {
+            const required = document.querySelectorAll('input[required]').length + 18; // 18 questões
             let filled = 0;
+            document.querySelectorAll('input[required]').forEach(i => { if(i.value.trim() !== '') filled++; });
             
-            // Contar campos de texto preenchidos
-            document.querySelectorAll('input[required], select[required]').forEach(input => {
-                if (input.value.trim() !== '') filled++;
-            });
-            
-            // Contar grupos de radio buttons selecionados (excluindo os desabilitados)
-            const checkedGroups = new Set();
-            document.querySelectorAll('input[type="radio"]:checked:not([disabled])').forEach(radio => {
-                checkedGroups.add(radio.name);
-            });
-            
-            return filled + checkedGroups.size;
+            const groups = new Set();
+            document.querySelectorAll('input[type="radio"]:checked').forEach(r => groups.add(r.name));
+            filled += groups.size;
+
+            document.getElementById('formProgress').style.width = (filled / required * 100) + '%';
         }
 
         function allFieldsFilled() {
-            // Verificar campos de texto obrigatórios
-            const requiredInputs = document.querySelectorAll('input[required], select[required]');
-            for (let input of requiredInputs) {
+            for (let input of document.querySelectorAll('input[required]')) {
                 if (input.value.trim() === '') return false;
             }
-
-            // Verificar grupos de radio buttons (apenas os habilitados)
-            const radioGroups = new Set();
-            document.querySelectorAll('input[type="radio"]:not([disabled])').forEach(radio => {
-                radioGroups.add(radio.name);
-            });
-
-            const checkedGroups = new Set();
-            document.querySelectorAll('input[type="radio"]:checked:not([disabled])').forEach(radio => {
-                checkedGroups.add(radio.name);
-            });
-
-            return radioGroups.size === checkedGroups.size;
+            const groups = new Set();
+            document.querySelectorAll('input[type="radio"]').forEach(r => groups.add(r.name));
+            const checked = new Set();
+            document.querySelectorAll('input[type="radio"]:checked').forEach(r => checked.add(r.name));
+            return groups.size === checked.size;
         }
 
         function getFieldValue(field) {
             if (field.id) {
-                const element = document.getElementById(field.id);
-                if (field.isTextContent) {
-                    return element ? element.textContent : '0';
-                }
-                return element ? element.value : '';
+                const el = document.getElementById(field.id);
+                return el ? (field.isTextContent ? el.textContent : el.value) : '';
             }
-            
             if (field.name) {
-                const selected = document.querySelector(`input[name="${field.name}"]:checked`);
-                return selected ? selected.value : '0';
+                const sel = document.querySelector(`input[name="${field.name}"]:checked`);
+                return sel ? sel.value : '0';
             }
-            
             return '';
         }
 
+        function showExportStatus(message, type) {
+            const div = document.getElementById('exportStatus');
+            div.textContent = message;
+            div.className = `export-status export-${type}`;
+            div.style.display = 'block';
+            setTimeout(() => div.style.display = 'none', 5000);
+        }
+
         function escapeCSV(value) {
-            if (value === null || value === undefined) return '';
-            const stringValue = String(value);
-            
-            // Se o valor contiver caracteres especiais, colocar entre aspas
-            if (/[",;\t\n]/.test(stringValue)) {
-                return `"${stringValue.replace(/"/g, '""')}"`;
-            }
-            return stringValue;
+            if (value == null) return '';
+            const str = String(value);
+            return /[",;\t\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
         }
 
         function exportData() {
             if (!allFieldsFilled()) {
-                showExportStatus('Por favor, preencha todos os campos obrigatórios antes de exportar.', 'error');
+                showExportStatus('Preencha todos os campos obrigatórios.', 'error');
                 return;
             }
-
-            // Adiciona o BOM (Byte Order Mark) para UTF-8
-            const BOM = "\uFEFF";
-            let csvContent = BOM;
-
-            // Cabeçalhos - cada item em uma coluna
-            const headers = EXPORT_FIELDS.map(field => escapeCSV(field.label));
-            csvContent += headers.join(';') + '\r\n';
+            let csvContent = "\uFEFF" + EXPORT_FIELDS.map(f => escapeCSV(f.label)).join(';') + '\r\n';
+            csvContent += EXPORT_FIELDS.map(f => escapeCSV(getFieldValue(f))).join(';') + '\r\n';
             
-            // Valores - cada valor na coluna abaixo do seu cabeçalho
-            const values = EXPORT_FIELDS.map(field => escapeCSV(getFieldValue(field)));
-            csvContent += values.join(';') + '\r\n';
-            
-            // Criar e baixar arquivo CSV
+            const fileName = `${document.getElementById('patientId').value}_${document.getElementById('patientName').value}_${document.getElementById('evaluationMoment').value}_MIF.csv`;
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
-            
-            // Gerar nome do arquivo: ID_Momento_Nome_MIF.csv
-            const patientId = document.getElementById('patientId').value || 'avaliacao';
-            const patientName = document.getElementById('patientName').value || 'paciente';
-            const evaluationMoment = document.getElementById('evaluationMoment').value || 'T0';
-            
-            // Formato: 02_Teste_T0_MIF
-            const fileName = `${patientId}_${patientName}_${evaluationMoment}_MIF.csv`;
-            
-            link.setAttribute('href', url);
-            link.setAttribute('download', fileName);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
             link.click();
-            document.body.removeChild(link);
-            
-            showExportStatus('✅ Arquivo CSV gerado com sucesso!', 'success');
+            showExportStatus('✅ CSV gerado com sucesso!', 'success');
         }
 
-        function showTable() {
+        function sendToSheets() {
             if (!allFieldsFilled()) {
-                showExportStatus('Por favor, preencha todos os campos obrigatórios antes de visualizar a tabela.', 'error');
+                showExportStatus('Preencha todos os campos obrigatórios antes de enviar.', 'error');
                 return;
             }
 
-            const tableHeader = document.getElementById('dataTableHeader');
-            const tableBody = document.getElementById('dataTableBody');
-            
-            tableHeader.innerHTML = '';
-            tableBody.innerHTML = '';
+            const btn = document.getElementById('btnSubmit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Enviando...';
+            btn.disabled = true;
+            showExportStatus('Enviando dados para a planilha...', 'success');
 
-            // Criar linha de cabeçalhos
-            const headerRow = document.createElement('tr');
-            EXPORT_FIELDS.forEach(field => {
-                const th = document.createElement('th');
-                th.textContent = field.label;
-                headerRow.appendChild(th);
+            const payload = {
+                escala: document.title,
+                headers: EXPORT_FIELDS.map(f => f.label),
+                values: EXPORT_FIELDS.map(f => getFieldValue(f))
+            };
+
+            const url = "https://script.google.com/macros/s/AKfycbzdAWqTlJqKJxOXduKZ2fpkoueWiZOdbDYwpdygvViKiHlJ_O6HCQEOnFA_62XAdtU4HA/exec"; 
+
+            fetch(url, {
+                method: 'POST',
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                showExportStatus('✅ Escala salva na planilha com sucesso!', 'success');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                setTimeout(resetForm, 3000);
+            })
+            .catch(error => {
+                showExportStatus('❌ Erro de conexão. Verifique sua internet.', 'error');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             });
-            tableHeader.appendChild(headerRow);
-
-            // Criar linha de valores
-            const valueRow = document.createElement('tr');
-            EXPORT_FIELDS.forEach(field => {
-                const td = document.createElement('td');
-                td.textContent = getFieldValue(field); // Mantém os valores 0
-                valueRow.appendChild(td);
-            });
-            tableBody.appendChild(valueRow);
-
-            const tableContainer = document.getElementById('dataTableContainer');
-            tableContainer.style.display = 'block';
-
-            // Scroll para a tabela
-            tableContainer.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Função para copiar apenas os valores numéricos da tabela (sem cabeçalhos)
-        function copyTableData() {
-            let tsvContent = '';
-            
-            // Adicionar apenas valores (sem cabeçalhos)
-            const values = EXPORT_FIELDS.map(field => getFieldValue(field));
-            tsvContent += values.join('\t');
-            
-            // Copiar para área de transferência
-            navigator.clipboard.writeText(tsvContent)
-                .then(() => {
-                    const btn = document.querySelector('.copy-btn');
-                    btn.classList.add('copy-success');
-                    btn.innerHTML = '✓ Valores Copiados!';
-                    
-                    setTimeout(() => {
-                        btn.classList.remove('copy-success');
-                        btn.innerHTML = '📋 Copiar Valores';
-                    }, 2000);
-                })
-                .catch(err => {
-                    showExportStatus('Erro ao copiar: ' + err, 'error');
-                });
-        }
-
-        function showExportStatus(message, type) {
-            const statusDiv = document.getElementById('exportStatus');
-            statusDiv.textContent = message;
-            statusDiv.className = `export-status export-${type}`;
-            statusDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 5000);
         }
 
         function resetForm() {
-            if (confirm('Tem certeza que deseja limpar todos os dados do formulário?')) {
-                // Limpar todos os campos
-                document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], select').forEach(input => {
-                    input.value = '';
-                });
-                
-                document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                    radio.checked = false;
-                });
-
-                // Redefinir data e hora atuais
+            if (confirm('Tem certeza que deseja limpar todos os dados?')) {
+                document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]').forEach(i => i.value = '');
+                document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
                 document.getElementById('evaluationDate').valueAsDate = new Date();
                 const now = new Date();
-                const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
-                                 now.getMinutes().toString().padStart(2, '0');
-                document.getElementById('evaluationTime').value = timeString;
-
-                // Ocultar tabela de dados
-                document.getElementById('dataTableContainer').style.display = 'none';
-
-                // Atualizar pontuações e progresso
+                document.getElementById('evaluationTime').value = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
                 updateScores();
                 updateProgress();
                 updateSelectedOptions();
-                
-                // Esconder status de exportação
-                document.getElementById('exportStatus').style.display = 'none';
             }
         }
     </script>
