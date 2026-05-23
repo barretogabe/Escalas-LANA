@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala Fugl-Meyer - Avaliação do Membro Superior</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: white;
+            color: var(--primary);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid var(--primary);
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .manual-link {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: var(--secondary);
+            text-decoration: none;
+            border: 1px solid var(--secondary);
+            transition: all 0.3s;
+        }
+        
+        .manual-link:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .form-intro {
+            padding: 25px;
+            background: var(--light);
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:disabled, .form-group select:disabled {
+            background: #f5f5f5;
+            color: #555;
+        }
+        
+        .section {
+            padding: 25px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+        }
+        
+        .section-header {
+            background: var(--dark);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .section-score {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .subsection {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--dark);
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .subsection-description {
+            background: #e8f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+        }
+        
+        .question-text {
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--dark);
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            background: #f0f4f8;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #ddd;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .option:hover {
+            background: #e3eaf3;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .option.selected {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .disabled-section {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .totals-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            color: white;
+            border-radius: 15px;
+            margin: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .total-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .total-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .total-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .total-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .total-max {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .total-ad {
+            background: rgba(39, 174, 96, 0.2);
+            grid-column: span 2;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(33, 150, 83, 0.4);
+        }
+        
+        .btn-reset {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(192, 57, 43, 0.4);
+        }
+        
+        .btn-table {
+            background: #2980b9;
+            color: white;
+        }
+        
+        .btn-table:hover {
+            background: #2573a7;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(37, 115, 167, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: white;
+            background: var(--primary);
+            font-size: 1rem;
+        }
+        
+        .references {
+            max-width: 800px;
+            margin: 20px auto 0;
+            text-align: left;
+            font-size: 0.85rem;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        
+        .references h4 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .references p {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                flex-direction: column;
+            }
+            
+            .option {
+                width: 100%;
+            }
+            
+            .totals-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .total-ad {
+                grid-column: span 1;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        .progress-container {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .conditional-note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        
+        .export-status {
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .export-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .export-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Estilos para a tabela de visualização */
+        .data-table-container {
+            display: none;
+            margin: 0 30px 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        .data-table-container h3 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        .data-table th {
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            position: sticky;
+            left: 0;
+            white-space: nowrap;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f1f7fd;
+        }
+        
+        .copy-instructions {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .table-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .copy-btn {
+            background: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #1d6fa5;
+        }
+        
+        .copy-success {
+            background: #27ae60;
+        }
+        
+        @media (max-width: 768px) {
+            .data-table-container {
+                overflow-x: auto;
+            }
+            
+            .data-table {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        Laboratório de Neurociência Aplicada
+                    </div>
+                </div>
+                <h1>Escala Fugl-Meyer - Avaliação do Membro Superior</h1>
+                <a href="https://doi.org/10.1590/S1413-35552006000200007" target="_blank" class="manual-link">
+                    Manual da escala: https://doi.org/10.1590/S1413-35552006000200007
+                </a>
+            </div>
+        </header>
+        
+        <div class="form-intro">
+            <h2 style="color: var(--primary); margin-bottom: 20px; text-align: center;">
+                Dados do Paciente
+            </h2>
+            
+            <div class="patient-info">
+                <div class="form-group">
+                    <label for="patientId">Identificação:</label>
+                    <input type="text" id="patientId" required placeholder="Número de identificação">
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientName">Nome do Paciente:</label>
+                    <input type="text" id="patientName" required placeholder="Digite o nome completo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationMoment">Momento da avaliação:</label>
+                    <input type="text" id="evaluationMoment" required placeholder="Ex: T0, T1, T2...">
+                </div>
+            </div>
+            
+            <div class="patient-info">
+                <div class="form-group">
+                    <label for="evaluator">Avaliador:</label>
+                    <input type="text" id="evaluator" required placeholder="Nome do avaliador">
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationDate">Data da Avaliação:</label>
+                    <input type="date" id="evaluationDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationTime">Horário:</label>
+                    <input type="time" id="evaluationTime" required>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="formProgress"></div>
+            </div>
+        </div>
+        
+        <div class="section" id="sectionA">
+            <div class="section-header">
+                <div class="section-title">A. EXTREMIDADE SUPERIOR</div>
+                <div class="section-score">Pontuação: <span id="scoreA">0</span>/36</div>
+            </div>
+            
+            <div class="subsection">
+                <div class="subsection-title">I. Motricidade Reflexa</div>
+                
+                <div class="question">
+                    <div class="question-text">Flexores: Bíceps e flexores dos dedos</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_I_flexores" value="0" data-section="A" data-subsection="I"> Ausente (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_I_flexores" value="2" data-section="A" data-subsection="I"> Presente (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Extensores: Triceps</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_I_extensores" value="0" data-section="A" data-subsection="I"> Ausente (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_I_extensores" value="2" data-section="A" data-subsection="I"> Presente (2)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <div class="subsection-title">II. Motricidade Ativa, sem ajuda gravitacional</div>
+                
+                <div class="question">
+                    <div class="question-text">Sinergia Flexora:</div>
+                    <div class="question">
+                        <div class="question-text">Ombro Retração</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_retracao" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_retracao" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_retracao" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">Ombro Elevação</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_elevacao" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_elevacao" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_elevacao" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">Ombro Abdução (90º)</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_abducao" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_abducao" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_abducao" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">Ombro Rotação</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_rotacao" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_rotacao" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_rotacao" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">Cotovelo Flexão</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_cotovelo_flex" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_cotovelo_flex" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_cotovelo_flex" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">Antebraço Supinação</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_supinacao" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_supinacao" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_supinacao" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Sinergia Extensora:</div>
+                    <div class="question">
+                        <div class="question-text">Adução do ombro/rotação interna</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_aducao" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_aducao" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_aducao" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">Extensão do cotovelo</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_cotovelo_ext" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_cotovelo_ext" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_cotovelo_ext" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">Pronação do antebraço</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="A_II_pronacao" value="0" data-section="A" data-subsection="II"> Ausente (0)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_pronacao" value="1" data-section="A" data-subsection="II"> Parcial (1)
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="A_II_pronacao" value="2" data-section="A" data-subsection="II"> Completo (2)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <div class="subsection-title">III. Movimentos sinergéticos combinados, sem compensação</div>
+                
+                <div class="question">
+                    <div class="question-text">Mão à coluna lombar</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_III_mao" value="0" data-section="A" data-subsection="III"> Não realizou (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_III_mao" value="1" data-section="A" data-subsection="III"> Mão passa espinha ilíaca (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_III_mao" value="2" data-section="A" data-subsection="III"> Realiza a ação (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Flexão de ombro de 0 a 90º; cotovelo em 0º e movimento pronação-supinação em 0º</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_III_flex_ombro" value="0" data-section="A" data-subsection="III"> Imediata abdução de braço ou flexão a 90º; de cotovelo (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_III_flex_ombro" value="1" data-section="A" data-subsection="III"> Abdução ou flexão do cotovelo durante o movimento (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_III_flex_ombro" value="2" data-section="A" data-subsection="III"> Movimentação normal (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Pronação-Supinação - cotovelo em 90º e ombro em 0º</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_III_prono_supino" value="0" data-section="A" data-subsection="III"> Não há pronação/supinação, não dá início (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_III_prono_supino" value="1" data-section="A" data-subsection="III"> Pronação/supinação limitada, mantém posição (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_III_prono_supino" value="2" data-section="A" data-subsection="III"> Movimentação normal (2)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection" id="subsectionIV">
+                <div class="subsection-title">IV. Movimento com leve ou sem sinergia</div>
+                
+                <div class="question">
+                    <div class="question-text">Abdução do ombro de 0 a 90º, com cotovelo extendido e pronado</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_IV_abd_0_90" value="0" data-section="A" data-subsection="IV"> Imediata supinação ou flexão de cotovelo (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_IV_abd_0_90" value="1" data-section="A" data-subsection="IV"> Abdução do ombro ou supinação do cotovelo durante o movimento (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_IV_abd_0_90" value="2" data-section="A" data-subsection="IV"> Movimentação normal (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Flexão do ombro de 90º para 180º, com antebraço neutro</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_IV_flex_90_180" value="0" data-section="A" data-subsection="IV"> Imediata abdução ou flexão de cotovelo (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_IV_flex_90_180" value="1" data-section="A" data-subsection="IV"> Abdução do ombro ou flexão de cotovelo durante o movimento (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_IV_flex_90_180" value="2" data-section="A" data-subsection="IV"> Movimentação normal (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Pronação/Supinação, cotovelo em 0º, ombro em 30 a 90º de abdução</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_IV_prono_supino" value="0" data-section="A" data-subsection="IV"> Não há pronação/supinação, não dá início (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_IV_prono_supino" value="1" data-section="A" data-subsection="IV"> Pronação/supinação limitada, mantendo extensão (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_IV_prono_supino" value="2" data-section="A" data-subsection="IV"> Movimentação normal (2)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="subsection disabled-section" id="subsectionV">
+                <div class="subsection-title">V. Atividade reflexa normal</div>
+                
+                <div class="conditional-note">
+                    Avaliado somente se alcançado o escore de 6 pontos na parte IV
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Bíceps, tríceps e flexores dos dedos</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="A_V_reflexos" value="0" data-section="A" data-subsection="V" disabled> 0 pontos na parte IV ou 2 de 3 reflexos hiperativos (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_V_reflexos" value="1" data-section="A" data-subsection="V" disabled> 1 reflexo hiperativo ou ao menos 2 reflexos presentes (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="A_V_reflexos" value="2" data-section="A" data-subsection="V" disabled> Não mais que 1 reflexo presente e nenhum hiperativo (2)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="sectionB">
+            <div class="section-header">
+                <div class="section-title">B. PUNHO</div>
+                <div class="section-score">Pontuação: <span id="scoreB">0</span>/10</div>
+            </div>
+            
+            <div class="subsection">
+                <div class="question">
+                    <div class="question-text">Estabilidade do punho em 15º de extensão (cotovelo em 90º, antebraço pronado, sem suporte)</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="B_estabilidade" value="0" data-section="B"> Não consegue realizar (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_estabilidade" value="1" data-section="B"> Consegue manter por alguns segundos (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_estabilidade" value="2" data-section="B"> Consegue manter contra resistência (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Flexão/extensão do punho (cotovelo em 90º, antebraço pronado, dedos relaxados)</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="B_flex_ext" value="0" data-section="B"> Não há movimento voluntário (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_flex_ext" value="1" data-section="B"> Movimento ativo limitado (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_flex_ext" value="2" data-section="B"> Movimento ativo normal (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Estabilidade do punho em 15º de extensão (cotovelo em 0º, antebraço pronado, sem suporte)</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="B_estab_ext" value="0" data-section="B"> Não consegue realizar (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_estab_ext" value="1" data-section="B"> Consegue manter por alguns segundos (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_estab_ext" value="2" data-section="B"> Consegue manter contra resistência (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Flexão/extensão do punho (cotovelo em 0º, antebraço pronado, dedos relaxados)</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="B_flex_ext_0" value="0" data-section="B"> Não há movimento voluntário (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_flex_ext_0" value="1" data-section="B"> Movimento ativo limitado (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_flex_ext_0" value="2" data-section="B"> Movimento ativo normal (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Circundução</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="B_circunducao" value="0" data-section="B"> Não consegue realizar (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_circunducao" value="1" data-section="B"> Movimento limitado e descontrolado (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="B_circunducao" value="2" data-section="B"> Movimento controlado e completo (2)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="sectionC">
+            <div class="section-header">
+                <div class="section-title">C. MÃO</div>
+                <div class="section-score">Pontuação: <span id="scoreC">0</span>/14</div>
+            </div>
+            
+            <div class="subsection">
+                <div class="question">
+                    <div class="question-text">Flexão em massa dos dedos</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="C_flex_massa" value="0" data-section="C"> Não há flexão (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_flex_massa" value="1" data-section="C"> Pouca flexão (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_flex_massa" value="2" data-section="C"> Flexão ativa completa (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Extensão em massa dos dedos</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="C_ext_massa" value="0" data-section="C"> Não há extensão (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_ext_massa" value="1" data-section="C"> Extensão limitada (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_ext_massa" value="2" data-section="C"> Extensão ativa completa (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Preensão 1: Flexão das articulações metacarpofalangeanas II-V e extensão das interfalangeanas</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="C_preensao1" value="0" data-section="C"> Não consegue realizar (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao1" value="1" data-section="C"> Preensão fraca (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao1" value="2" data-section="C"> Preensão mantida contra resistência (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Preensão 2: Adução do polegar</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="C_preensao2" value="0" data-section="C"> Não consegue realizar (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao2" value="1" data-section="C"> Preensão fraca (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao2" value="2" data-section="C"> Preensão mantida contra resistência (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Preensão 3: Pinça polegar-indicador (oposição)</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="C_preensao3" value="0" data-section="C"> Não consegue realizar (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao3" value="1" data-section="C"> Preensão fraca (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao3" value="2" data-section="C"> Preensão mantida contra resistência (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Preensão 4: Pinça cilíndrica</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="C_preensao4" value="0" data-section="C"> Não consegue realizar (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao4" value="1" data-section="C"> Preensão fraca (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao4" value="2" data-section="C"> Preensão mantida contra resistência (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Preensão 5: Preensão esférica</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="C_preensao5" value="0" data-section="C"> Não consegue realizar (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao5" value="1" data-section="C"> Preensão fraca (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="C_preensao5" value="2" data-section="C"> Preensão mantida contra resistência (2)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="sectionD">
+            <div class="section-header">
+                <div class="section-title">D. COORDENAÇÃO/VELOCIDADE</div>
+                <div class="section-score">Pontuação: <span id="scoreD">0</span>/6</div>
+            </div>
+            
+            <div class="subsection">
+                <div class="question">
+                    <div class="question-text">Tremor</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="D_tremor" value="0" data-section="D"> Tremor marcante (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="D_tremor" value="1" data-section="D"> Tremor leve (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="D_tremor" value="2" data-section="D"> Sem tremor (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Dismetria</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="D_dismetria" value="0" data-section="D"> Dismetria pronunciada (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="D_dismetria" value="1" data-section="D"> Dismetria leve (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="D_dismetria" value="2" data-section="D"> Sem dismetria (2)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <div class="question-text">Velocidade: Índice-nariz 5 vezes o mais rápido possível</div>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="D_velocidade" value="0" data-section="D"> Pelo menos 6 segundos mais lento que o normal (0)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="D_velocidade" value="1" data-section="D"> 2-5 segundos mais lento que o normal (1)
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="D_velocidade" value="2" data-section="D"> Menos que 2 segundos de diferença (2)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="totals-section">
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">
+                Pontuação Total
+            </h2>
+            
+            <div class="totals-grid">
+                <div class="total-item">
+                    <div class="total-label">A. Extremidade Superior</div>
+                    <div class="total-value" id="totalA">0</div>
+                    <div class="total-max">/ 36</div>
+                </div>
+                
+                <div class="total-item">
+                    <div class="total-label">B. Punho</div>
+                    <div class="total-value" id="totalB">0</div>
+                    <div class="total-max">/ 10</div>
+                </div>
+                
+                <div class="total-item">
+                    <div class="total-label">C. Mão</div>
+                    <div class="total-value" id="totalC">0</div>
+                    <div class="total-max">/ 14</div>
+                </div>
+                
+                <div class="total-item">
+                    <div class="total-label">D. Coordenação/Velocidade</div>
+                    <div class="total-value" id="totalD">0</div>
+                    <div class="total-max">/ 6</div>
+                </div>
+                
+                <div class="total-item total-ad">
+                    <div class="total-label">TOTAL GERAL</div>
+                    <div class="total-value" id="totalGeral">0</div>
+                    <div class="total-max">/ 66</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="export-status" id="exportStatus"></div>
+
+        <div class="buttons">
+            <button class="btn" onclick="sendToSheets()" id="btnSubmit" style="background: #8e44ad; color: white;">
+                ☁️ Salvar na Planilha
+            </button>
+            <button class="btn btn-success" onclick="exportData()">
+                💾 Baixar CSV
+            </button>
+            <button class="btn btn-table" onclick="showTable()">
+                📊 Mostrar Tabela
+            </button>
+            <button class="btn btn-reset" onclick="resetForm()">
+                🔄 Limpar Formulário
+            </button>
+        </div>
+
+        <div class="data-table-container" id="dataTableContainer">
+            <h3>Dados da Avaliação</h3>
+            <div class="table-responsive">
+                <table class="data-table" id="dataTable">
+                    <thead id="dataTableHeader">
+                        </thead>
+                    <tbody id="dataTableBody">
+                        </tbody>
+                </table>
+            </div>
+            <div class="copy-instructions">
+                Selecione e copie os dados para colar em uma planilha
+            </div>
+            
+            <div class="table-buttons">
+                <button class="copy-btn" onclick="copyTableData()">
+                    📋 Copiar Valores
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Laboratório de Neurociência Aplicada - Escala Fugl-Meyer</p>
+        <div class="references">
+            <p>Maki, T., Quagliato, E. M. A. B., Cacho, E. W. A., Paz, L. P. S., Nascimento, N. H., Inoue, M. M. E. A., & Viana, M. A. (2006). Reliability study on the application of the Fugl-Meyer scale in Brazil. Revista Brasileira de Fisioterapia, 10(2), 177-183.</p>
+        </div>
+    </footer>
+    <script>
+        // Mapeamento completo dos campos para exportação
+        const EXPORT_FIELDS = [
+            // Dados do paciente (ID primeiro, depois nome)
+            {id: 'patientId', label: 'Identificação'},
+            {id: 'patientName', label: 'Nome do Paciente'},
+            {id: 'evaluationMoment', label: 'Momento da avaliação'},
+            {id: 'evaluator', label: 'Avaliador'},
+            {id: 'evaluationDate', label: 'Data da Avaliação'},
+            {id: 'evaluationTime', label: 'Horário'},
+            
+            // Seção A - Extremidade Superior
+            {name: 'A_I_flexores', label: 'Flexores: Bíceps e flexores dos dedos'},
+            {name: 'A_I_extensores', label: 'Extensores: Triceps'},
+            {name: 'A_II_retracao', label: 'Ombro Retração'},
+            {name: 'A_II_elevacao', label: 'Ombro Elevação'},
+            {name: 'A_II_abducao', label: 'Ombro Abdução (90º)'},
+            {name: 'A_II_rotacao', label: 'Ombro Rotação'},
+            {name: 'A_II_cotovelo_flex', label: 'Cotovelo Flexão'},
+            {name: 'A_II_supinacao', label: 'Antebraço Supinação'},
+            {name: 'A_II_aducao', label: 'Adução do ombro/rotação interna'},
+            {name: 'A_II_cotovelo_ext', label: 'Extensão do cotovelo'},
+            {name: 'A_II_pronacao', label: 'Pronação do antebraço'},
+            {name: 'A_III_mao', label: 'Mão à coluna lombar'},
+            {name: 'A_III_flex_ombro', label: 'Flexão de ombro de 0 a 90º; cotovelo em 0º'},
+            {name: 'A_III_prono_supino', label: 'Prontação-Supinação - cotovelo em 90º'},
+            {name: 'A_IV_abd_0_90', label: 'Abdução do ombro de 0 a 90º'},
+            {name: 'A_IV_flex_90_180', label: 'Flexão do ombro de 90º para 180º'},
+            {name: 'A_IV_prono_supino', label: 'Prontação/Supinação - cotovelo em 0º'},
+            {name: 'A_V_reflexos', label: 'Bíceps etríceps e flexores dos dedos'},
+            
+            // Seção B - Punho
+            {name: 'B_estabilidade', label: 'Estabilidade em 15º de extensão (cotovelo 90º)'},
+            {name: 'B_flex_ext', label: 'Flexão/extensão alternada (cotovelo 90º)'},
+            {name: 'B_estab_ext', label: 'Estabilidade em 15º de extensão (cotovelo 0º)'},
+            {name: 'B_flex_ext_0', label: 'Flexão/extensão alternada (cotovelo 0º)'},
+            {name: 'B_circunducao', label: 'Circundução'},
+            
+            // Seção C - Mão
+            {name: 'C_flex_massa', label: 'Flexão em Massa'},
+            {name: 'C_ext_massa', label: 'Extensão em Massa'},
+            {name: 'C_preensao1', label: 'A - Flexão IFD e IFP (II-V) + extensão MCF'},
+            {name: 'C_preensao2', label: 'B - Adução do polegar (segurar papel)'},
+            {name: 'C_preensao3', label: 'C - Oposição polegar/2º dedo (caneta)'},
+            {name: 'C_preensao4', label: 'D - Objeto cilíndrico'},
+            {name: 'C_preensao5', label: 'E - Objeto esférico (bola de tênis)'},
+            
+            // Seção D - Coordenação/Velocidade
+            {name: 'D_tremor', label: 'Tremor'},
+            {name: 'D_dismetria', label: 'Dismetria'},
+            {name: 'D_velocidade', label: 'Velocidade'},
+            
+            // Totais
+            {id: 'totalA', label: 'Total A (Extremidade Superior)', isTextContent: true},
+            {id: 'totalB', label: 'Total B (Punho)', isTextContent: true},
+            {id: 'totalC', label: 'Total C (Mão)', isTextContent: true},
+            {id: 'totalD', label: 'Total D (Coordenação/Velocidade)', isTextContent: true},
+            {id: 'totalGeral', label: 'TOTAL A-D (Geral)', isTextContent: true}
+        ];
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Adicionar event listeners para todos os radio buttons
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateScores();
+                    updateProgress();
+                    updateSelectedOptions();
+                });
+            });
+
+            // Adicionar event listeners para campos de texto
+            const textInputs = document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]');
+            textInputs.forEach(input => {
+                input.addEventListener('input', updateProgress);
+            });
+
+            // Definir data atual
+            document.getElementById('evaluationDate').valueAsDate = new Date();
+            
+            // Definir horário atual
+            const now = new Date();
+            const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                             now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('evaluationTime').value = timeString;
+
+            updateScores();
+            updateProgress();
+            updateSelectedOptions(); // Atualizar estilização inicial
+        });
+
+        function updateSelectedOptions() {
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Add selected class to checked options
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                radio.closest('.option').classList.add('selected');
+            });
+        }
+
+        function updateScores() {
+            // Calcular pontuação da Seção A
+            let scoreA = 0;
+            const sectionARadios = document.querySelectorAll('input[data-section="A"]:checked');
+            sectionARadios.forEach(radio => {
+                scoreA += parseInt(radio.value);
+            });
+
+            // Verificar se a subseção IV tem 6 pontos para habilitar a subseção V
+            const subsectionIVScore = getSubsectionScore('A', 'IV');
+            const subsectionV = document.getElementById('subsectionV');
+            const subsectionVRadios = document.querySelectorAll('input[name="A_V_reflexos"]');
+            
+            if (subsectionIVScore === 6) {
+                // Habilitar subseção V
+                subsectionV.classList.remove('disabled-section');
+                subsectionVRadios.forEach(radio => {
+                    radio.disabled = false;
+                });
+            } else {
+                // Desabilitar subseção V e resetar seleções
+                subsectionV.classList.add('disabled-section');
+                subsectionVRadios.forEach(radio => {
+                    radio.disabled = true;
+                    radio.checked = false;
+                });
+            }
+
+            // Calcular pontuação da Seção B
+            let scoreB = 0;
+            const sectionBRadios = document.querySelectorAll('input[data-section="B"]:checked');
+            sectionBRadios.forEach(radio => {
+                scoreB += parseInt(radio.value);
+            });
+
+            // Calcular pontuação da Seção C
+            let scoreC = 0;
+            const sectionCRadios = document.querySelectorAll('input[data-section="C"]:checked');
+            sectionCRadios.forEach(radio => {
+                scoreC += parseInt(radio.value);
+            });
+
+            // Calcular pontuação da Seção D
+            let scoreD = 0;
+            const sectionDRadios = document.querySelectorAll('input[data-section="D"]:checked');
+            sectionDRadios.forEach(radio => {
+                scoreD += parseInt(radio.value);
+            });
+
+            // Atualizar displays
+            document.getElementById('scoreA').textContent = scoreA;
+            document.getElementById('scoreB').textContent = scoreB;
+            document.getElementById('scoreC').textContent = scoreC;
+            document.getElementById('scoreD').textContent = scoreD;
+
+            document.getElementById('totalA').textContent = scoreA;
+            document.getElementById('totalB').textContent = scoreB;
+            document.getElementById('totalC').textContent = scoreC;
+            document.getElementById('totalD').textContent = scoreD;
+
+            const totalGeral = scoreA + scoreB + scoreC + scoreD;
+            document.getElementById('totalGeral').textContent = totalGeral;
+        }
+
+        function getSubsectionScore(section, subsection) {
+            let score = 0;
+            const radios = document.querySelectorAll(`input[data-section="${section}"][data-subsection="${subsection}"]:checked`);
+            radios.forEach(radio => {
+                score += parseInt(radio.value);
+            });
+            return score;
+        }
+
+        function updateProgress() {
+            const totalFields = getTotalRequiredFields();
+            const filledFields = getFilledRequiredFields();
+            const progress = (filledFields / totalFields) * 100;
+            document.getElementById('formProgress').style.width = progress + '%';
+        }
+
+        function getTotalRequiredFields() {
+            // Contar campos de texto obrigatórios
+            const textFields = document.querySelectorAll('input[required]').length;
+            
+            // Contar grupos de radio buttons (excluindo os desabilitados)
+            const radioGroups = new Set();
+            document.querySelectorAll('input[type="radio"]:not([disabled])').forEach(radio => {
+                radioGroups.add(radio.name);
+            });
+            
+            return textFields + radioGroups.size;
+        }
+
+        function getFilledRequiredFields() {
+            let filled = 0;
+            
+            // Contar campos de texto preenchidos
+            document.querySelectorAll('input[required]').forEach(input => {
+                if (input.value.trim() !== '') filled++;
+            });
+            
+            // Contar grupos de radio buttons selecionados (excluindo os desabilitados)
+            const checkedGroups = new Set();
+            document.querySelectorAll('input[type="radio"]:checked:not([disabled])').forEach(radio => {
+                checkedGroups.add(radio.name);
+            });
+            
+            return filled + checkedGroups.size;
+        }
+
+        function allFieldsFilled() {
+            // Verificar campos de texto obrigatórios
+            const requiredInputs = document.querySelectorAll('input[required]');
+            for (let input of requiredInputs) {
+                if (input.value.trim() === '') return false;
+            }
+
+            // Verificar grupos de radio buttons (apenas os habilitados)
+            const radioGroups = new Set();
+            document.querySelectorAll('input[type="radio"]:not([disabled])').forEach(radio => {
+                radioGroups.add(radio.name);
+            });
+
+            const checkedGroups = new Set();
+            document.querySelectorAll('input[type="radio"]:checked:not([disabled])').forEach(radio => {
+                checkedGroups.add(radio.name);
+            });
+
+            return radioGroups.size === checkedGroups.size;
+        }
+
+        function getFieldValue(field) {
+            if (field.id) {
+                const element = document.getElementById(field.id);
+                if (field.isTextContent) {
+                    return element ? element.textContent : '0';
+                }
+                return element ? element.value : '';
+            }
+            
+            if (field.name) {
+                const selected = document.querySelector(`input[name="${field.name}"]:checked`);
+                return selected ? selected.value : '0';
+            }
+            
+            return '';
+        }
+
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            
+            // Se o valor contiver caracteres especiais, colocar entre aspas
+            if (/[",;\t\n]/.test(stringValue)) {
+                return `"${stringValue.replace(/"/g, '""')}"`;
+            }
+            return stringValue;
+        }
+
+        function exportData() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Por favor, preencha todos os campos obrigatórios antes de exportar.', 'error');
+                return;
+            }
+
+            // Adiciona o BOM (Byte Order Mark) para UTF-8
+            const BOM = "\uFEFF";
+            let csvContent = BOM;
+
+            // Cabeçalhos - cada item em uma coluna
+            const headers = EXPORT_FIELDS.map(field => escapeCSV(field.label));
+            csvContent += headers.join(';') + '\r\n';
+            
+            // Valores - cada valor na coluna abaixo do seu cabeçalho
+            const values = EXPORT_FIELDS.map(field => escapeCSV(getFieldValue(field)));
+            csvContent += values.join(';') + '\r\n';
+            
+            // Criar e baixar arquivo CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            
+            // Gerar nome do arquivo: ID_Momento_Nome_FMA_UE.csv
+            const patientId = document.getElementById('patientId').value || 'avaliacao';
+            const patientName = document.getElementById('patientName').value || 'paciente';
+            const evaluationMoment = document.getElementById('evaluationMoment').value || 'T0';
+            
+            // Formato: 02_Teste_T0_FMA_UE
+            const fileName = `${patientId}_${patientName}_${evaluationMoment}_FMA_UE.csv`;
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showExportStatus('✅ Arquivo CSV gerado com sucesso!', 'success');
+        }
+
+        function showTable() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Por favor, preencha todos os campos obrigatórios antes de visualizar a tabela.', 'error');
+                return;
+            }
+
+            const tableHeader = document.getElementById('dataTableHeader');
+            const tableBody = document.getElementById('dataTableBody');
+            
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Criar linha de cabeçalhos
+            const headerRow = document.createElement('tr');
+            EXPORT_FIELDS.forEach(field => {
+                const th = document.createElement('th');
+                th.textContent = field.label;
+                headerRow.appendChild(th);
+            });
+            tableHeader.appendChild(headerRow);
+
+            // Criar linha de valores
+            const valueRow = document.createElement('tr');
+            EXPORT_FIELDS.forEach(field => {
+                const td = document.createElement('td');
+                td.textContent = getFieldValue(field); // Mantém os valores 0
+                valueRow.appendChild(td);
+            });
+            tableBody.appendChild(valueRow);
+
+            const tableContainer = document.getElementById('dataTableContainer');
+            tableContainer.style.display = 'block';
+
+            // Scroll para a tabela
+            tableContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Função para copiar apenas os valores numéricos da tabela (sem cabeçalhos)
+        function copyTableData() {
+            let tsvContent = '';
+            
+            // Adicionar apenas valores (sem cabeçalhos)
+            const values = EXPORT_FIELDS.map(field => getFieldValue(field));
+            tsvContent += values.join('\t');
+            
+            // Copiar para área de transferência
+            navigator.clipboard.writeText(tsvContent)
+                .then(() => {
+                    const btn = document.querySelector('.copy-btn');
+                    btn.classList.add('copy-success');
+                    btn.innerHTML = '✓ Valores Copiados!';
+                    
+                    setTimeout(() => {
+                        btn.classList.remove('copy-success');
+                        btn.innerHTML = '📋 Copiar Valores';
+                    }, 2000);
+                })
+                .catch(err => {
+                    showExportStatus('Erro ao copiar: ' + err, 'error');
+                });
+        }
+
+        function showExportStatus(message, type) {
+            const statusDiv = document.getElementById('exportStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `export-status export-${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function sendToSheets() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Preencha todos os campos obrigatórios antes de enviar.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Enviando...';
+            btn.disabled = true;
+            showExportStatus('Enviando dados para a planilha...', 'success');
+
+            let headers = EXPORT_FIELDS.map(field => field.label);
+            let values = EXPORT_FIELDS.map(field => getFieldValue(field));
+
+            // Ajuste dinâmico para os grupos musculares da escala de Ashworth
+            if (typeof muscleGroups !== 'undefined') {
+                muscleGroups.forEach(group => {
+                    headers.push(group.name);
+                    values.push(group.value); 
+                });
+            }
+
+            const payload = {
+                escala: document.title,
+                headers: headers,
+                values: values
+            };
+
+            // URL DA SUA PLANILHA APLICADA AQUI
+            const url = "https://script.google.com/macros/s/AKfycbzdAWqTlJqKJxOXduKZ2fpkoueWiZOdbDYwpdygvViKiHlJ_O6HCQEOnFA_62XAdtU4HA/exec"; 
+
+            fetch(url, {
+                method: 'POST',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                showExportStatus('✅ Escala salva na planilha com sucesso!', 'success');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                setTimeout(resetForm, 3000);
+            })
+            .catch(error => {
+                showExportStatus('❌ Erro de conexão. Verifique sua internet.', 'error');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function resetForm() {
+            if (confirm('Tem certeza que deseja limpar todos os dados do formulário?')) {
+                // Limpar todos os campos
+                document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]').forEach(input => {
+                    input.value = '';
+                });
+                
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+
+                // Redefinir data e hora atuais
+                document.getElementById('evaluationDate').valueAsDate = new Date();
+                const now = new Date();
+                const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                                 now.getMinutes().toString().padStart(2, '0');
+                document.getElementById('evaluationTime').value = timeString;
+
+                // Ocultar tabela de dados
+                document.getElementById('dataTableContainer').style.display = 'none';
+
+                // Atualizar pontuações e progresso
+                updateScores();
+                updateProgress();
+                updateSelectedOptions();
+                
+                // Esconder status de exportação
+                document.getElementById('exportStatus').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
