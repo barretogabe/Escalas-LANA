@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medida de Independência Funcional (MIF)</title>
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #b21f1f;
+            --accent: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f1c40f;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: white;
+            color: var(--primary);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid var(--primary);
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .form-intro {
+            padding: 25px;
+            background: var(--light);
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .section {
+            padding: 25px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+        }
+        
+        .section-header {
+            background: var(--dark);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .section-score {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            background: #f0f4f8;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #ddd;
+        }
+        
+        .option:hover {
+            background: #e3eaf3;
+            transform: translateX(5px);
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .option.selected {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(178, 31, 31, 0.3);
+        }
+        
+        .totals-section {
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 15px;
+            margin: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .total-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .total-label {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .total-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .total-max {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .total-ad {
+            background: rgba(39, 174, 96, 0.2);
+            grid-column: 1 / -1;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .btn-success { background: var(--success); color: white; }
+        .btn-reset { background: var(--secondary); color: white; }
+        .btn-table { background: var(--dark); color: white; }
+        
+        .progress-container {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .export-status {
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .export-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .export-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: white;
+            background: var(--primary);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">Laboratório de Neurociência Aplicada</div>
+                </div>
+                <h1>Medida de Independência Funcional (MIF)</h1>
+            </div>
+        </header>
+        
+        <div class="form-intro">
+            <h2 style="color: var(--primary); margin-bottom: 20px; text-align: center;">Dados do Paciente</h2>
+            <div class="patient-info">
+                <div class="form-group">
+                    <label for="patientId">Identificação:</label>
+                    <input type="text" id="patientId" required placeholder="Número de identificação">
+                </div>
+                <div class="form-group">
+                    <label for="patientName">Nome do Paciente:</label>
+                    <input type="text" id="patientName" required placeholder="Digite o nome completo">
+                </div>
+                <div class="form-group">
+                    <label for="evaluationMoment">Momento da avaliação:</label>
+                    <input type="text" id="evaluationMoment" required placeholder="Ex: T0, T1, T2...">
+                </div>
+            </div>
+            <div class="patient-info">
+                <div class="form-group">
+                    <label for="evaluator">Avaliador:</label>
+                    <input type="text" id="evaluator" required placeholder="Nome do avaliador">
+                </div>
+                <div class="form-group">
+                    <label for="evaluationDate">Data da Avaliação:</label>
+                    <input type="date" id="evaluationDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="evaluationTime">Horário:</label>
+                    <input type="time" id="evaluationTime" required>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="formProgress"></div>
+            </div>
+        </div>
+
+        <div class="section" id="sectionCuidados">
+            <div class="section-header">
+                <div class="section-title">Cuidados Pessoais</div>
+                <div class="section-score">Pontuação: <span id="scoreCuidados">0</span>/42</div>
+            </div>
+
+            <script>
+                const cuidadosItems = [
+                    { id: 'A', name: 'A_Alimentacao', label: 'A. Alimentação' },
+                    { id: 'B', name: 'B_HigienePessoal', label: 'B. Higiene Pessoal' },
+                    { id: 'C', name: 'C_Banho', label: 'C. Banho' },
+                    { id: 'D', name: 'D_VestirSuperior', label: 'D. Vestir Metade Superior' },
+                    { id: 'E', name: 'E_VestirInferior', label: 'E. Vestir Metade Inferior' },
+                    { id: 'F', name: 'F_UsoVaso', label: 'F. Uso do Vaso Sanitário' }
+                ];
+
+                const scoreOptions = [
+                    { value: 7, text: '7 - Independência Completa (Segurança)' },
+                    { value: 6, text: '6 - Independência Modificada (Uso de dispositivo/Tempo maior)' },
+                    { value: 5, text: '5 - Supervisão ou Preparação' },
+                    { value: 4, text: '4 - Assistência Mínima (Paciente realiza 75% ou mais)' },
+                    { value: 3, text: '3 - Assistência Moderada (Paciente realiza 50% a 74%)' },
+                    { value: 2, text: '2 - Assistência Máxima (Paciente realiza 25% a 49%)' },
+                    { value: 1, text: '1 - Assistência Total (Paciente realiza menos de 25%)' }
+                ];
+
+                function renderQuestions(items, sectionClass) {
+                    items.forEach(item => {
+                        document.write(`
+                            <div class="question">
+                                <div class="question-text">${item.label}</div>
+                                <div class="options">
+                                    ${scoreOptions.map(opt => `
+                                        <label class="option">
+                                            <input type="radio" name="${item.name}" value="${opt.value}" class="${sectionClass}"> ${opt.text}
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `);
+                    });
+                }
+                renderQuestions(cuidadosItems, 'calc-cuidados');
+            </script>
+        </div>
+
+        <div class="section" id="sectionEsfincteres">
+            <div class="section-header">
+                <div class="section-title">Controle Esfincteriano</div>
+                <div class="section-score">Pontuação: <span id="scoreEsfincteres">0</span>/14</div>
+            </div>
+            <script>
+                renderQuestions([
+                    { id: 'G', name: 'G_Urina', label: 'G. Controle da Urina' },
+                    { id: 'H', name: 'H_Fezes', label: 'H. Controle das Fezes' }
+                ], 'calc-esfincteres');
+            </script>
+        </div>
+
+        <div class="section" id="sectionTransferencias">
+            <div class="section-header">
+                <div class="section-title">Transferências</div>
+                <div class="section-score">Pontuação: <span id="scoreTransferencias">0</span>/21</div>
+            </div>
+            <script>
+                renderQuestions([
+                    { id: 'I', name: 'I_LeitoCadeira', label: 'I. Leito, Cadeira, Cadeira de Rodas' },
+                    { id: 'J', name: 'J_Vaso', label: 'J. Vaso Sanitário' },
+                    { id: 'K', name: 'K_BanheiraChuveiro', label: 'K. Banheira ou Chuveiro' }
+                ], 'calc-transferencias');
+            </script>
+        </div>
+
+        <div class="section" id="sectionLocomocao">
+            <div class="section-header">
+                <div class="section-title">Locomoção</div>
+                <div class="section-score">Pontuação: <span id="scoreLocomocao">0</span>/14</div>
+            </div>
+            <script>
+                renderQuestions([
+                    { id: 'L', name: 'L_MarchaCadeira', label: 'L. Marcha/Cadeira de Rodas' },
+                    { id: 'M', name: 'M_Escadas', label: 'M. Escadas' }
+                ], 'calc-locomocao');
+            </script>
+        </div>
+
+        <div class="section" id="sectionComunicacao">
+            <div class="section-header">
+                <div class="section-title">Comunicação</div>
+                <div class="section-score">Pontuação: <span id="scoreComunicacao">0</span>/14</div>
+            </div>
+            <script>
+                renderQuestions([
+                    { id: 'N', name: 'N_Compreensao', label: 'N. Compreensão' },
+                    { id: 'O', name: 'O_Expressao', label: 'O. Expressão' }
+                ], 'calc-comunicacao');
+            </script>
+        </div>
+
+        <div class="section" id="sectionCognicao">
+            <div class="section-header">
+                <div class="section-title">Cognição Social</div>
+                <div class="section-score">Pontuação: <span id="scoreCognicao">0</span>/21</div>
+            </div>
+            <script>
+                renderQuestions([
+                    { id: 'P', name: 'P_InteracaoSocial', label: 'P. Interação Social' },
+                    { id: 'Q', name: 'Q_ResolucaoProblemas', label: 'Q. Resolução de Problemas' },
+                    { id: 'R', name: 'R_Memoria', label: 'R. Memória' }
+                ], 'calc-cognicao');
+            </script>
+        </div>
+
+        <div class="totals-section">
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">Pontuação Total</h2>
+            <div class="totals-grid">
+                <div class="total-item">
+                    <div class="total-label">Escore Motor (A-M)</div>
+                    <div class="total-value" id="totalMotor">0</div>
+                    <div class="total-max">/ 91</div>
+                </div>
+                <div class="total-item">
+                    <div class="total-label">Escore Cognitivo (N-R)</div>
+                    <div class="total-value" id="totalCognitivo">0</div>
+                    <div class="total-max">/ 35</div>
+                </div>
+                <div class="total-item total-ad">
+                    <div class="total-label">MIF TOTAL</div>
+                    <div class="total-value" id="totalGeral">0</div>
+                    <div class="total-max">/ 126</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="export-status" id="exportStatus"></div>
+
+        <div class="buttons">
+            <button class="btn" onclick="sendToSheets()" id="btnSubmit" style="background: #8e44ad; color: white;">
+                ☁️ Salvar na Planilha
+            </button>
+            <button class="btn btn-success" onclick="exportData()">
+                💾 Baixar CSV
+            </button>
+            <button class="btn btn-reset" onclick="resetForm()">
+                🔄 Limpar Formulário
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Laboratório de Neurociência Aplicada - MIF</p>
+    </footer>
+
+    <script>
+        // Configuração de exportação
+        const EXPORT_FIELDS = [
+            {id: 'patientId', label: 'Identificação'},
+            {id: 'patientName', label: 'Nome do Paciente'},
+            {id: 'evaluationMoment', label: 'Momento da avaliação'},
+            {id: 'evaluator', label: 'Avaliador'},
+            {id: 'evaluationDate', label: 'Data da Avaliação'},
+            {id: 'evaluationTime', label: 'Horário'},
+            
+            {name: 'A_Alimentacao', label: 'A. Alimentação'},
+            {name: 'B_HigienePessoal', label: 'B. Higiene Pessoal'},
+            {name: 'C_Banho', label: 'C. Banho'},
+            {name: 'D_VestirSuperior', label: 'D. Vestir Superior'},
+            {name: 'E_VestirInferior', label: 'E. Vestir Inferior'},
+            {name: 'F_UsoVaso', label: 'F. Uso do Vaso'},
+            
+            {name: 'G_Urina', label: 'G. Controle da Urina'},
+            {name: 'H_Fezes', label: 'H. Controle das Fezes'},
+            
+            {name: 'I_LeitoCadeira', label: 'I. Transf. Leito/Cadeira'},
+            {name: 'J_Vaso', label: 'J. Transf. Vaso'},
+            {name: 'K_BanheiraChuveiro', label: 'K. Transf. Chuveiro'},
+            
+            {name: 'L_MarchaCadeira', label: 'L. Marcha/Cadeira'},
+            {name: 'M_Escadas', label: 'M. Escadas'},
+            
+            {name: 'N_Compreensao', label: 'N. Compreensão'},
+            {name: 'O_Expressao', label: 'O. Expressão'},
+            
+            {name: 'P_InteracaoSocial', label: 'P. Interação Social'},
+            {name: 'Q_ResolucaoProblemas', label: 'Q. Resolução Problemas'},
+            {name: 'R_Memoria', label: 'R. Memória'},
+            
+            {id: 'totalMotor', label: 'Escore Motor', isTextContent: true},
+            {id: 'totalCognitivo', label: 'Escore Cognitivo', isTextContent: true},
+            {id: 'totalGeral', label: 'Escore Total MIF', isTextContent: true}
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateScores();
+                    updateProgress();
+                    updateSelectedOptions();
+                });
+            });
+
+            document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]').forEach(input => {
+                input.addEventListener('input', updateProgress);
+            });
+
+            document.getElementById('evaluationDate').valueAsDate = new Date();
+            const now = new Date();
+            document.getElementById('evaluationTime').value = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            updateScores();
+            updateProgress();
+        });
+
+        function updateSelectedOptions() {
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                radio.closest('.option').classList.add('selected');
+            });
+        }
+
+        function calculateSectionScore(className) {
+            let score = 0;
+            document.querySelectorAll(`input.${className}:checked`).forEach(radio => {
+                score += parseInt(radio.value);
+            });
+            return score;
+        }
+
+        function updateScores() {
+            const scCuidados = calculateSectionScore('calc-cuidados');
+            const scEsfincteres = calculateSectionScore('calc-esfincteres');
+            const scTransf = calculateSectionScore('calc-transferencias');
+            const scLocomocao = calculateSectionScore('calc-locomocao');
+            const scComunicacao = calculateSectionScore('calc-comunicacao');
+            const scCognicao = calculateSectionScore('calc-cognicao');
+
+            document.getElementById('scoreCuidados').textContent = scCuidados;
+            document.getElementById('scoreEsfincteres').textContent = scEsfincteres;
+            document.getElementById('scoreTransferencias').textContent = scTransf;
+            document.getElementById('scoreLocomocao').textContent = scLocomocao;
+            document.getElementById('scoreComunicacao').textContent = scComunicacao;
+            document.getElementById('scoreCognicao').textContent = scCognicao;
+
+            const totalMotor = scCuidados + scEsfincteres + scTransf + scLocomocao;
+            const totalCognitivo = scComunicacao + scCognicao;
+
+            document.getElementById('totalMotor').textContent = totalMotor;
+            document.getElementById('totalCognitivo').textContent = totalCognitivo;
+            document.getElementById('totalGeral').textContent = totalMotor + totalCognitivo;
+        }
+
+        function updateProgress() {
+            const required = document.querySelectorAll('input[required]').length + 18; // 18 questões
+            let filled = 0;
+            document.querySelectorAll('input[required]').forEach(i => { if(i.value.trim() !== '') filled++; });
+            
+            const groups = new Set();
+            document.querySelectorAll('input[type="radio"]:checked').forEach(r => groups.add(r.name));
+            filled += groups.size;
+
+            document.getElementById('formProgress').style.width = (filled / required * 100) + '%';
+        }
+
+        function allFieldsFilled() {
+            for (let input of document.querySelectorAll('input[required]')) {
+                if (input.value.trim() === '') return false;
+            }
+            const groups = new Set();
+            document.querySelectorAll('input[type="radio"]').forEach(r => groups.add(r.name));
+            const checked = new Set();
+            document.querySelectorAll('input[type="radio"]:checked').forEach(r => checked.add(r.name));
+            return groups.size === checked.size;
+        }
+
+        function getFieldValue(field) {
+            if (field.id) {
+                const el = document.getElementById(field.id);
+                return el ? (field.isTextContent ? el.textContent : el.value) : '';
+            }
+            if (field.name) {
+                const sel = document.querySelector(`input[name="${field.name}"]:checked`);
+                return sel ? sel.value : '0';
+            }
+            return '';
+        }
+
+        function showExportStatus(message, type) {
+            const div = document.getElementById('exportStatus');
+            div.textContent = message;
+            div.className = `export-status export-${type}`;
+            div.style.display = 'block';
+            setTimeout(() => div.style.display = 'none', 5000);
+        }
+
+        function escapeCSV(value) {
+            if (value == null) return '';
+            const str = String(value);
+            return /[",;\t\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+        }
+
+        function exportData() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Preencha todos os campos obrigatórios.', 'error');
+                return;
+            }
+            let csvContent = "\uFEFF" + EXPORT_FIELDS.map(f => escapeCSV(f.label)).join(';') + '\r\n';
+            csvContent += EXPORT_FIELDS.map(f => escapeCSV(getFieldValue(f))).join(';') + '\r\n';
+            
+            const fileName = `${document.getElementById('patientId').value}_${document.getElementById('patientName').value}_${document.getElementById('evaluationMoment').value}_MIF.csv`;
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
+            showExportStatus('✅ CSV gerado com sucesso!', 'success');
+        }
+
+        function sendToSheets() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Preencha todos os campos obrigatórios antes de enviar.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Enviando...';
+            btn.disabled = true;
+            showExportStatus('Enviando dados para a planilha...', 'success');
+
+            const payload = {
+                escala: document.title,
+                headers: EXPORT_FIELDS.map(f => f.label),
+                values: EXPORT_FIELDS.map(f => getFieldValue(f))
+            };
+
+            const url = "https://script.google.com/macros/s/AKfycbzdAWqTlJqKJxOXduKZ2fpkoueWiZOdbDYwpdygvViKiHlJ_O6HCQEOnFA_62XAdtU4HA/exec"; 
+
+            fetch(url, {
+                method: 'POST',
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                showExportStatus('✅ Escala salva na planilha com sucesso!', 'success');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                setTimeout(resetForm, 3000);
+            })
+            .catch(error => {
+                showExportStatus('❌ Erro de conexão. Verifique sua internet.', 'error');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function resetForm() {
+            if (confirm('Tem certeza que deseja limpar todos os dados?')) {
+                document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]').forEach(i => i.value = '');
+                document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+                document.getElementById('evaluationDate').valueAsDate = new Date();
+                const now = new Date();
+                document.getElementById('evaluationTime').value = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                updateScores();
+                updateProgress();
+                updateSelectedOptions();
+            }
+        }
+    </script>
+</body>
+</html>
