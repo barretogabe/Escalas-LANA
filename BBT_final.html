@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box and Blocks Test (BBT)</title>
+    <style>
+        :root {
+            --primary: #6c3483; /* Roxo Escuro */
+            --secondary: #8e44ad; /* Roxo Claro */
+            --accent: #f39c12; /* Laranja/Amarelo para destaque */
+            --light: #f4ecf7; /* Fundo lilás muito claro */
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f1c40f;
+            --info-bg: #e8f4f8;
+            --info-border: #3498db;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: white;
+            color: var(--primary);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid var(--primary);
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .manual-link {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: var(--secondary);
+            text-decoration: none;
+            border: 1px solid var(--secondary);
+            transition: all 0.3s;
+        }
+        
+        .manual-link:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+        }
+        
+        .form-intro {
+            padding: 25px;
+            background: var(--light);
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+        
+        /* Estilos da Caixa de Instruções */
+        .instruction-box {
+            background: var(--info-bg);
+            border-left: 6px solid var(--info-border);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .instruction-box h3 {
+            color: var(--info-border);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instruction-box ul, .instruction-box ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .instruction-box li {
+            margin-bottom: 8px;
+        }
+        
+        .speech-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+            border: 1px dashed var(--info-border);
+            margin-top: 10px;
+            color: #555;
+        }
+        
+        .section {
+            padding: 25px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+        }
+        
+        .section-header {
+            background: var(--dark);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .clinical-context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            background: #fdfdfd;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            margin-bottom: 25px;
+        }
+        
+        .highlight-box {
+            background: #fff9e6;
+            border: 1px solid #fdebd0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .score-input-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .score-input-container label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            flex: 1;
+        }
+        
+        .score-input-container input[type="number"] {
+            width: 120px;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            color: var(--primary);
+            border: 2px solid var(--secondary);
+        }
+        
+        .totals-section {
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 15px;
+            margin: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .totals-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .total-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 200px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .total-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .total-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .btn-success { background: var(--success); color: white; }
+        .btn-reset { background: #e74c3c; color: white; }
+        
+        .btn:hover { transform: translateY(-3px); }
+        
+        .progress-container {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .export-status {
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .export-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .export-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: white;
+            background: var(--primary);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        Laboratório de Neurociência Aplicada
+                    </div>
+                </div>
+                <h1>Box and Blocks Test (BBT)</h1>
+                <a href="https://www.sralab.org/sites/default/files/2017-06/Box%20and%20Blocks%20Test%20Instructions.pdf" target="_blank" class="manual-link">
+                    📋 Manual de Instruções Original (PDF)
+                </a>
+            </div>
+        </header>
+        
+        <div class="form-intro">
+            <h2 style="color: var(--primary); margin-bottom: 20px; text-align: center;">
+                Dados do Paciente
+            </h2>
+            
+            <div class="patient-info">
+                <div class="form-group">
+                    <label for="patientId">Identificação:</label>
+                    <input type="text" id="patientId" required placeholder="Número de identificação">
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientName">Nome do Paciente:</label>
+                    <input type="text" id="patientName" required placeholder="Digite o nome completo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationMoment">Momento da avaliação:</label>
+                    <input type="text" id="evaluationMoment" required placeholder="Ex: T0, T1, T2...">
+                </div>
+            </div>
+            
+            <div class="patient-info">
+                <div class="form-group">
+                    <label for="evaluator">Avaliador:</label>
+                    <input type="text" id="evaluator" required placeholder="Nome do avaliador">
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationDate">Data da Avaliação:</label>
+                    <input type="date" id="evaluationDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationTime">Horário:</label>
+                    <input type="time" id="evaluationTime" required>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="formProgress"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Contexto Clínico do Paciente</div>
+            </div>
+            
+            <div class="clinical-context-grid">
+                <div class="form-group">
+                    <label for="isStroke">Paciente pós-AVC?</label>
+                    <select id="isStroke" required>
+                        <option value="" disabled selected>Selecione...</option>
+                        <option value="Sim">Sim</option>
+                        <option value="Não">Não</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pareticHand">Mão Parética:</label>
+                    <select id="pareticHand" required>
+                        <option value="" disabled selected>Selecione...</option>
+                        <option value="Direita">Direita</option>
+                        <option value="Esquerda">Esquerda</option>
+                        <option value="Bilateral">Bilateral</option>
+                        <option value="Não se aplica">Não se aplica</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dominantHand">Mão Dominante (Pré-lesão se aplicável):</label>
+                    <select id="dominantHand" required>
+                        <option value="" disabled selected>Selecione...</option>
+                        <option value="Direita">Direita (Destro)</option>
+                        <option value="Esquerda">Esquerda (Canhoto)</option>
+                        <option value="Ambidestro">Ambidestro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <div class="clinical-context-grid" style="background: transparent; border: none; padding: 0; margin: 0;">
+                    <div class="form-group">
+                        <label for="dominantIsParetic">A Mão Dominante é a Parética?</label>
+                        <select id="dominantIsParetic" required>
+                            <option value="" disabled selected>Selecione...</option>
+                            <option value="Sim">Sim</option>
+                            <option value="Não">Não</option>
+                            <option value="Não se aplica">Não se aplica</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="testedParetic">O paciente realizou o teste com a mão parética?</label>
+                        <select id="testedParetic" required>
+                            <option value="" disabled selected>Selecione...</option>
+                            <option value="Sim">Sim, conseguiu realizar</option>
+                            <option value="Não">Não, incapacidade motora severa</option>
+                            <option value="Não se aplica">Não se aplica</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="instruction-box">
+                <h3>ℹ️ Instruções para o Avaliador</h3>
+                <p><strong>Preparação:</strong> O paciente deve estar sentado de frente para a caixa. Coloque 150 blocos no compartimento do lado da mão dominante do paciente.</p>
+                <br>
+                <p><strong>Regras de Contagem:</strong></p>
+                <ul>
+                    <li>O paciente deve transportar <strong>um bloco de cada vez</strong>.</li>
+                    <li>Se transportar dois ou mais ao mesmo tempo, subtraia esse número do total.</li>
+                    <li>Não há penalidade se o bloco cair no chão ou na mesa após cruzar a divisória.</li>
+                </ul>
+                <p><strong>Leia em voz alta para o paciente:</strong></p>
+                <div class="speech-box">
+                    "Quero ver quão rápido você consegue pegar um bloco de cada vez com sua mão direita (ou esquerda). Leve-o para o outro lado da caixa e solte. Certifique-se de que seus dedos cruzem a divisória."<br><br>
+                    "Primeiro você pode praticar. Coloque suas mãos nas laterais da caixa. Pegue um bloco de cada vez com sua mão e solte-o do outro lado."<br><br>
+                    <em>(Após 15 segundos de treino, retorne os blocos)</em><br><br>
+                    "Este será o teste oficial. As instruções são as mesmas. Trabalhe o mais rápido que puder. Preparado? (Aguarde 3s) Comece! (Aguarde 1 minuto) Pare!"
+                </div>
+            </div>
+            
+            <div class="section-header" style="margin-top: 30px;">
+                <div class="section-title">Resultados do Teste (1 Minuto)</div>
+            </div>
+            
+            <div class="score-input-container">
+                <label for="blocksDominant">Nº de blocos transportados - Mão DOMINANTE:</label>
+                <input type="number" id="blocksDominant" min="0" step="1" required placeholder="0">
+            </div>
+            
+            <div class="score-input-container" style="border-left-color: var(--dark);">
+                <label for="blocksNonDominant">Nº de blocos transportados - Mão NÃO-DOMINANTE:</label>
+                <input type="number" id="blocksNonDominant" min="0" step="1" required placeholder="0">
+            </div>
+        </div>
+        
+        <div class="totals-section">
+            <h2>Resumo de Desempenho (Blocos/Minuto)</h2>
+            <div class="totals-grid">
+                <div class="total-item">
+                    <div class="total-label">Mão Dominante</div>
+                    <div class="total-value" id="displayDominant">0</div>
+                </div>
+                <div class="total-item" style="background: rgba(0,0,0,0.2);">
+                    <div class="total-label">Mão Não-Dominante</div>
+                    <div class="total-value" id="displayNonDominant">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="export-status" id="exportStatus"></div>
+
+        <div class="buttons">
+            <button class="btn" onclick="sendToSheets()" id="btnSubmit" style="background: var(--primary); color: white;">
+                ☁️ Salvar na Planilha
+            </button>
+            <button class="btn btn-success" onclick="exportData()">
+                💾 Baixar CSV
+            </button>
+            <button class="btn btn-reset" onclick="resetForm()">
+                🔄 Limpar Formulário
+            </button>
+        </div>
+
+        <div style="text-align: center; margin-top: -10px; margin-bottom: 30px;">
+            <a href="https://docs.google.com/spreadsheets/d/19qW-SRi5lAGdSW0AfRWS75fgqJMMzdhD1iMZ8kK8hII/edit?gid=700494913#gid=700494913" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #f1f2f6; color: #2c3e50; text-decoration: none; border-radius: 8px; font-weight: bold; border: 1px solid #dcdde1; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                📊 Abrir Planilha de Resultados
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Laboratório de Neurociência Aplicada - Box and Blocks Test (BBT)</p>
+        <div class="references">
+            <p>Mathiowetz, V., Volland, G., Kashman, N., & Weber, K. (1985). Adult norms for the Box and Block Test of manual dexterity. American Journal of Occupational Therapy, 39(6), 386-391.</p>
+        </div>
+    </footer>
+
+    <script>
+        const EXPORT_FIELDS = [
+            {id: 'patientId', label: 'Identificação'},
+            {id: 'patientName', label: 'Nome do Paciente'},
+            {id: 'evaluationMoment', label: 'Momento da avaliação'},
+            {id: 'evaluator', label: 'Avaliador'},
+            {id: 'evaluationDate', label: 'Data da Avaliação'},
+            {id: 'evaluationTime', label: 'Horário'},
+            {id: 'isStroke', label: 'Paciente pós-AVC?'},
+            {id: 'pareticHand', label: 'Mão Parética'},
+            {id: 'dominantHand', label: 'Mão Dominante'},
+            {id: 'dominantIsParetic', label: 'A Mão Dominante é a Parética?'},
+            {id: 'testedParetic', label: 'Fez o teste com a mão parética?'},
+            {id: 'blocksDominant', label: 'Blocos da Mão Dominante'},
+            {id: 'blocksNonDominant', label: 'Blocos da Mão Não Dominante'}
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('evaluationDate').valueAsDate = new Date();
+            const now = new Date();
+            document.getElementById('evaluationTime').value = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            document.getElementById('blocksDominant').addEventListener('input', function() {
+                document.getElementById('displayDominant').textContent = this.value || '0';
+            });
+            document.getElementById('blocksNonDominant').addEventListener('input', function() {
+                document.getElementById('displayNonDominant').textContent = this.value || '0';
+            });
+
+            document.querySelectorAll('input[required], select[required]').forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+            updateProgress();
+        });
+
+        function updateProgress() {
+            const requiredFields = document.querySelectorAll('input[required], select[required]');
+            let filled = 0;
+            requiredFields.forEach(field => { if (field.value.trim() !== '') filled++; });
+            document.getElementById('formProgress').style.width = (filled / requiredFields.length * 100) + '%';
+        }
+
+        function allFieldsFilled() {
+            for (let field of document.querySelectorAll('input[required], select[required]')) {
+                if (field.value.trim() === '') return false;
+            }
+            return true;
+        }
+
+        function getFieldValue(field) {
+            const element = document.getElementById(field.id);
+            return element ? element.value : '';
+        }
+
+        function showExportStatus(message, type) {
+            const statusDiv = document.getElementById('exportStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `export-status export-${type}`;
+            statusDiv.style.display = 'block';
+            setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
+        }
+
+        function sendToSheets() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Preencha todos os campos obrigatórios antes de enviar.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Enviando...';
+            btn.disabled = true;
+            showExportStatus('Enviando dados para a planilha...', 'success');
+
+            const payload = {
+                escala: document.title,
+                headers: EXPORT_FIELDS.map(f => f.label),
+                values: EXPORT_FIELDS.map(f => getFieldValue(f))
+            };
+
+            const url = "https://script.google.com/macros/s/AKfycbzdAWqTlJqKJxOXduKZ2fpkoueWiZOdbDYwpdygvViKiHlJ_O6HCQEOnFA_62XAdtU4HA/exec"; 
+
+            fetch(url, {
+                method: 'POST',
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                showExportStatus('✅ Teste salvo na planilha com sucesso!', 'success');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                setTimeout(resetForm, 3000);
+            })
+            .catch(error => {
+                showExportStatus('❌ Erro de conexão.', 'error');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function resetForm() {
+            if (confirm('Tem certeza que deseja limpar todos os dados?')) {
+                document.querySelectorAll('input[type="text"], input[type="number"]').forEach(i => i.value = '');
+                document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+                document.getElementById('evaluationDate').valueAsDate = new Date();
+                const now = new Date();
+                document.getElementById('evaluationTime').value = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                document.getElementById('displayDominant').textContent = '0';
+                document.getElementById('displayNonDominant').textContent = '0';
+                updateProgress();
+            }
+        }
+
+        function exportData() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Preencha os campos obrigatórios antes de baixar.', 'error');
+                return;
+            }
+            let csvContent = "\uFEFF" + EXPORT_FIELDS.map(f => f.label).join(';') + '\r\n';
+            csvContent += EXPORT_FIELDS.map(f => getFieldValue(f)).join(';') + '\r\n';
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${document.getElementById('patientId').value}_BBT.csv`;
+            link.click();
+        }
+    </script>
+</body>
+</html>
