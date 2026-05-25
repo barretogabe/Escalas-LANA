@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala Modificada de Ashworth</title>
+    <style>
+        :root {
+            --primary: #d35400; /* Laranja escuro */
+            --secondary: #e67e22; /* Laranja */
+            --accent: #e74c3c; /* Vermelho */
+            --light: #fef5e7; /* Bege claro */
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: white;
+            color: var(--primary);
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid var(--primary);
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .manual-link {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: var(--secondary);
+            text-decoration: none;
+            border: 1px solid var(--secondary);
+            transition: all 0.3s;
+        }
+        
+        .manual-link:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
+        }
+        
+        .form-intro {
+            padding: 25px;
+            background: var(--light);
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+        
+        .section {
+            padding: 25px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+        }
+        
+        .section-header {
+            background: var(--dark);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .section-score {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .subsection {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--dark);
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+        
+        .question-text {
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--dark);
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            background: #f0f4f8;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #ddd;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .option:hover {
+            background: #e3eaf3;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .option.selected {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+        }
+        
+        .totals-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #d35400, #e67e22);
+            color: white;
+            border-radius: 15px;
+            margin: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .total-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .total-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .total-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .total-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .total-max {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(33, 150, 83, 0.4);
+        }
+        
+        .btn-reset {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-reset:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(192, 57, 43, 0.4);
+        }
+        
+        .btn-table {
+            background: #2980b9;
+            color: white;
+        }
+        
+        .btn-table:hover {
+            background: #2573a7;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(37, 115, 167, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: white;
+            background: var(--primary);
+            font-size: 1rem;
+        }
+        
+        .references {
+            max-width: 800px;
+            margin: 20px auto 0;
+            text-align: left;
+            font-size: 0.85rem;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        
+        .references h4 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .references p {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                flex-direction: column;
+            }
+            
+            .option {
+                width: 100%;
+            }
+            
+            .totals-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        .progress-container {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .conditional-note {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        
+        .export-status {
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .export-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .export-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .data-table-container {
+            display: none;
+            margin: 0 30px 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        .data-table-container h3 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        .data-table th {
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            position: sticky;
+            left: 0;
+            white-space: nowrap;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f1f7fd;
+        }
+        
+        .copy-instructions {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .table-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .copy-btn {
+            background: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #1d6fa5;
+        }
+        
+        .copy-success {
+            background: #27ae60;
+        }
+        
+        .instruction-note {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        
+        .muscle-group-container {
+            margin-bottom: 30px;
+        }
+        
+        .muscle-group-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .remove-group {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .add-group-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .ashworth-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        
+        .ashworth-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .ashworth-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        
+        .ashworth-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .numeric-value {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        /* Estilos para o resumo de avaliação */
+        .summary-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .summary-label {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        /* Recuo nas instruções de aplicação */
+        .instruction-note ol {
+            padding-left: 1.5cm;
+        }
+        
+        .instruction-note li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .instruction-note li:before {
+            content: "";
+            position: absolute;
+            left: -0.5cm;
+            width: 0.5cm;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        Laboratório de Neurociência Aplicada
+                    </div>
+                </div>
+                <h1>Escala Modificada de Ashworth</h1>
+                <a href="https://doi.org/10.1093/ptj/67.2.206" target="_blank" class="manual-link">
+                    Artigo original: https://doi.org/10.1093/ptj/67.2.206
+                </a>
+            </div>
+        </header>
+        
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Classificação da Espasticidade</div>
+            </div>
+            
+            <table class="ashworth-table">
+                <thead>
+                    <tr>
+                        <th width="15%">Grau</th>
+                        <th width="85%">Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>Sem aumento do tônus muscular</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Discreto aumento do tônus muscular, manifestado pelo apreender e liberar, ou por mínima resistência ao final da amplitude de movimento, quando a parte (ou as partes) afetada é movimentada em flexão e extensão.</td>
+                    </tr>
+                    <tr>
+                        <td>1+</td>
+                        <td>Discreto aumento no tônus muscular, manifestado pelo apreender, seguido de mínima resistência através do resto (menos da metade) da amplitude de movimento.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Marcante aumento do tônus muscular através da maior parte da amplitude de movimento, porém as partes afetadas são facilmente movimentadas.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Considerável aumento do tônus muscular; movimentos passivos dificultados.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>A parte (ou partes) afetada mostra-se rígida à flexão ou extensão.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="conditional-note">
+                <strong>Importante para análise estatística:</strong> O valor 1+ será convertido para 2 para fins de cálculo numérico. 
+                Assim, os valores numéricos para análise serão: 
+                <span class="numeric-value">0</span> = 0, 
+                <span class="numeric-value">1</span> = 1, 
+                <span class="numeric-value">1+</span> = 2, 
+                <span class="numeric-value">2</span> = 3, 
+                <span class="numeric-value">3</span> = 4, 
+                <span class="numeric-value">4</span> = 5.
+            </div>
+        </div>
+        
+        <div class="form-intro">
+            <h2 style="color: var(--primary); margin-bottom: 20px; text-align: center;">
+                Dados do Paciente
+            </h2>
+            
+            <div class="patient-info" id="patientInfo">
+                <div class="form-group">
+                    <label for="patientId">Identificação:</label>
+                    <input type="text" id="patientId" required placeholder="Número de identificação">
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientName">Nome do Paciente:</label>
+                    <input type="text" id="patientName" required placeholder="Digite o nome completo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationMoment">Momento da avaliação:</label>
+                    <input type="text" id="evaluationMoment" required placeholder="Ex: T0, T1, T2...">
+                </div>
+            </div>
+            
+            <div class="patient-info">
+                <div class="form-group">
+                    <label for="evaluator">Avaliador:</label>
+                    <input type="text" id="evaluator" required placeholder="Nome do avaliador">
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationDate">Data da Avaliação:</label>
+                    <input type="date" id="evaluationDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="evaluationTime">Horário:</label>
+                    <input type="time" id="evaluationTime" required>
+                </div>
+            </div>
+            
+            <div class="instruction-note">
+                <strong>Instruções de aplicação:</strong>
+                <ol>
+                    <li>Posicione o paciente em decúbito dorsal com os membros relaxados.</li>
+                    <li>Realize movimentos passivos rápidos em toda amplitude de movimento da articulação avaliada.</li>
+                    <li>Classifique a resistência encontrada de acordo com a escala.</li>
+                    <li>Repita o procedimento para todos os grupos musculares a serem avaliados.</li>
+                </ol>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="formProgress"></div>
+            </div>
+        </div>
+        
+        <div class="section" id="muscleGroupsSection">
+            <div class="section-header">
+                <div class="section-title">Grupos Musculares Avaliados</div>
+                <div class="section-score">Pontuação: <span id="scoreTotal">0</span></div>
+            </div>
+            
+            <div id="muscleGroupsContainer">
+                </div>
+            
+            <button class="add-group-btn" onclick="addMuscleGroup()">
+                ➕ Adicionar Grupo Muscular
+            </button>
+        </div>
+        
+        <div class="totals-section">
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">
+                Resumo da Avaliação
+            </h2>
+            
+            <div id="summaryResults">
+                </div>
+        </div>
+
+        <div class="export-status" id="exportStatus"></div>
+
+        <div class="buttons">
+            <button class="btn" onclick="sendToSheets()" id="btnSubmit" style="background: #8e44ad; color: white;">
+                ☁️ Salvar na Planilha
+            </button>
+            <button class="btn btn-success" onclick="exportData()">
+                💾 Baixar CSV
+            </button>
+            <button class="btn btn-table" onclick="showTable()">
+                📊 Mostrar Tabela
+            </button>
+            <button class="btn btn-reset" onclick="resetForm()">
+                🔄 Limpar Formulário
+            </button>
+        </div>
+
+        <div class="data-table-container" id="dataTableContainer">
+            <h3>Dados da Avaliação - Escala de Ashworth</h3>
+            <div class="table-responsive">
+                <table class="data-table" id="dataTable">
+                    <thead id="dataTableHeader">
+                        </thead>
+                    <tbody id="dataTableBody">
+                        </tbody>
+                </table>
+            </div>
+            <div class="copy-instructions">
+                Selecione e copie os dados para colar em uma planilha
+            </div>
+            
+            <div class="table-buttons">
+                <button class="copy-btn" onclick="copyTableData()">
+                    📋 Copiar Valores
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Laboratório de Neurociência Aplicada - Escala Modificada de Ashworth</p>
+        <div class="references">
+            <p>Bohannon, R. W., & Smith, M. B. (1987). Interrater reliability of a modified Ashworth scale of muscle spasticity. Physical therapy, 67(2), 206-207.</p>
+        </div>
+    </footer>
+    <script>
+        // Mapeamento dos campos para exportação
+        const EXPORT_FIELDS = [
+            // Dados do paciente
+            {id: 'patientId', label: 'Identificação'},
+            {id: 'patientName', label: 'Nome do Paciente'},
+            {id: 'evaluationMoment', label: 'Momento da avaliação'},
+            {id: 'evaluator', label: 'Avaliador'},
+            {id: 'evaluationDate', label: 'Data da Avaliação'},
+            {id: 'evaluationTime', label: 'Horário'}
+        ];
+
+        // Contador para grupos musculares
+        let muscleGroupCount = 0;
+        let muscleGroups = [];
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Definir data atual
+            document.getElementById('evaluationDate').valueAsDate = new Date();
+            
+            // Definir horário atual
+            const now = new Date();
+            const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                             now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('evaluationTime').value = timeString;
+
+            // Adicionar o primeiro grupo muscular
+            addMuscleGroup();
+        });
+
+        // Adicionar um novo grupo muscular
+        function addMuscleGroup() {
+            muscleGroupCount++;
+            const groupId = `group_${muscleGroupCount}`;
+            
+            // Criar HTML para o grupo muscular
+            const groupHTML = `
+                <div class="muscle-group-container" id="${groupId}">
+                    <div class="muscle-group-header">
+                        <div class="subsection-title">Grupo Muscular ${muscleGroupCount}</div>
+                        <button class="remove-group" onclick="removeMuscleGroup('${groupId}')">✖ Remover</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="muscleGroupName_${muscleGroupCount}">Nome do Grupo Muscular:</label>
+                        <input type="text" id="muscleGroupName_${muscleGroupCount}" required placeholder="Ex: Flexores de cotovelo">
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">Classificação da Espasticidade</div>
+                        <div class="options">
+                            <label class="option">
+                                <input type="radio" name="ashworth_${muscleGroupCount}" value="0" required> 0 - Sem aumento
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="ashworth_${muscleGroupCount}" value="1"> 1 - Discreto aumento
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="ashworth_${muscleGroupCount}" value="1+"> 1+ - Discreto aumento
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="ashworth_${muscleGroupCount}" value="2"> 2 - Marcante aumento
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="ashworth_${muscleGroupCount}" value="3"> 3 - Considerável aumento
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="ashworth_${muscleGroupCount}" value="4"> 4 - Rigidez
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Adicionar ao container
+            document.getElementById('muscleGroupsContainer').insertAdjacentHTML('beforeend', groupHTML);
+            
+            // Adicionar event listeners aos novos radio buttons
+            document.querySelectorAll(`#${groupId} input[type="radio"]`).forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateScores();
+                    updateProgress();
+                    updateSelectedOptions();
+                });
+            });
+            
+            // Adicionar event listener ao campo de texto
+            document.getElementById(`muscleGroupName_${muscleGroupCount}`).addEventListener('input', updateProgress);
+            
+            // Atualizar contagens
+            updateScores();
+            updateProgress();
+            updateSelectedOptions();
+        }
+
+        // Remover um grupo muscular
+        function removeMuscleGroup(groupId) {
+            if (muscleGroupCount <= 1) {
+                alert('É necessário ter pelo menos um grupo muscular avaliado.');
+                return;
+            }
+            
+            document.getElementById(groupId).remove();
+            muscleGroupCount--;
+            updateScores();
+            updateProgress();
+        }
+
+        function updateSelectedOptions() {
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Add selected class to checked options
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                radio.closest('.option').classList.add('selected');
+            });
+        }
+
+        function updateScores() {
+            let totalSum = 0;
+            
+            // Coletar todos os grupos
+            muscleGroups = [];
+            
+            for (let i = 1; i <= muscleGroupCount; i++) {
+                const groupElement = document.getElementById(`group_${i}`);
+                if (!groupElement) continue;
+                
+                const nameInput = document.getElementById(`muscleGroupName_${i}`);
+                const groupName = nameInput ? nameInput.value : `Grupo ${i}`;
+                const selectedRadio = groupElement.querySelector('input[type="radio"]:checked');
+                
+                let value = 0;
+                let displayValue = '0';
+                
+                if (selectedRadio) {
+                    displayValue = selectedRadio.value;
+                    
+                    // Converter para valor numérico conforme especificado
+                    switch(displayValue) {
+                        case '0': value = 0; break;
+                        case '1': value = 1; break;
+                        case '1+': value = 2; break;
+                        case '2': value = 3; break;
+                        case '3': value = 4; break;
+                        case '4': value = 5; break;
+                        default: value = 0;
+                    }
+                }
+                
+                muscleGroups.push({
+                    id: i,
+                    name: groupName,
+                    value: value,
+                    displayValue: displayValue
+                });
+                
+                totalSum += value;
+            }
+            
+            // Atualizar o resumo da avaliação
+            updateSummaryResults();
+            
+            // Atualizar pontuação total
+            document.getElementById('scoreTotal').textContent = totalSum;
+        }
+
+        function updateSummaryResults() {
+            const summaryContainer = document.getElementById('summaryResults');
+            summaryContainer.innerHTML = '';
+            
+            muscleGroups.forEach(group => {
+                const summaryItem = document.createElement('div');
+                summaryItem.className = 'summary-item';
+                summaryItem.innerHTML = `
+                    <div class="summary-label">${group.name}</div>
+                    <div class="summary-value">${group.displayValue}</div>
+                `;
+                summaryContainer.appendChild(summaryItem);
+            });
+            
+            // Se não houver grupos, mostrar mensagem
+            if (muscleGroups.length === 0) {
+                summaryContainer.innerHTML = '<p style="text-align: center; padding: 20px;">Adicione grupos musculares acima para ver o resumo</p>';
+            }
+        }
+
+        function updateProgress() {
+            const totalFields = getTotalRequiredFields();
+            const filledFields = getFilledRequiredFields();
+            const progress = (filledFields / totalFields) * 100;
+            document.getElementById('formProgress').style.width = progress + '%';
+        }
+
+        function getTotalRequiredFields() {
+            // Campos de dados do paciente
+            const patientFields = document.querySelectorAll('#patientInfo input[required]').length;
+            
+            // Campos de nome de grupo muscular
+            const groupNameFields = muscleGroupCount;
+            
+            // Grupos de radio buttons
+            const radioGroups = muscleGroupCount;
+            
+            return patientFields + groupNameFields + radioGroups;
+        }
+
+        function getFilledRequiredFields() {
+            let filled = 0;
+            
+            // Campos de dados do paciente
+            document.querySelectorAll('#patientInfo input[required]').forEach(input => {
+                if (input.value.trim() !== '') filled++;
+            });
+            
+            // Campos de nome de grupo muscular
+            for (let i = 1; i <= muscleGroupCount; i++) {
+                const nameInput = document.getElementById(`muscleGroupName_${i}`);
+                if (nameInput && nameInput.value.trim() !== '') filled++;
+            }
+            
+            // Grupos de radio buttons selecionados
+            for (let i = 1; i <= muscleGroupCount; i++) {
+                const groupElement = document.getElementById(`group_${i}`);
+                if (groupElement && groupElement.querySelector('input[type="radio"]:checked')) {
+                    filled++;
+                }
+            }
+            
+            return filled;
+        }
+
+        function allFieldsFilled() {
+            // Verificar campos de dados do paciente
+            const requiredInputs = document.querySelectorAll('#patientInfo input[required]');
+            for (let input of requiredInputs) {
+                if (input.value.trim() === '') return false;
+            }
+            
+            // Verificar grupos musculares
+            for (let i = 1; i <= muscleGroupCount; i++) {
+                const groupElement = document.getElementById(`group_${i}`);
+                if (!groupElement) continue;
+                
+                // Verificar nome do grupo
+                const nameInput = document.getElementById(`muscleGroupName_${i}`);
+                if (!nameInput || nameInput.value.trim() === '') return false;
+                
+                // Verificar classificação selecionada
+                const selectedRadio = groupElement.querySelector('input[type="radio"]:checked');
+                if (!selectedRadio) return false;
+            }
+            
+            return true;
+        }
+
+        function getFieldValue(field) {
+            if (field.id) {
+                const element = document.getElementById(field.id);
+                return element ? element.value : '';
+            }
+            return '';
+        }
+
+        function showExportStatus(message, type) {
+            const statusDiv = document.getElementById('exportStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `export-status export-${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // ---------- FUNÇÃO PARA ENVIAR PARA A PLANILHA DO GOOGLE ----------
+        function sendToSheets() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Preencha todos os campos obrigatórios antes de enviar.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Enviando...';
+            btn.disabled = true;
+            showExportStatus('Enviando dados para a planilha...', 'success');
+
+            // 1. Coleta os cabeçalhos fixos (dados do paciente)
+            let headers = EXPORT_FIELDS.map(field => field.label);
+            let values = EXPORT_FIELDS.map(field => getFieldValue(field));
+
+            // 2. Coleta os cabeçalhos e valores dinâmicos dos grupos musculares adicionados
+            if (typeof muscleGroups !== 'undefined') {
+                muscleGroups.forEach(group => {
+                    headers.push(group.name); // Usa o nome que o aluno digitou (Ex: "Flexores de cotovelo")
+                    values.push(group.value); // Usa o valor numérico convertido
+                });
+            }
+
+            const payload = {
+                escala: document.title, // "Escala Modificada de Ashworth"
+                headers: headers,
+                values: values
+            };
+
+            // URL DA SUA PLANILHA APLICADA AQUI
+            const url = "https://script.google.com/macros/s/AKfycbzdAWqTlJqKJxOXduKZ2fpkoueWiZOdbDYwpdygvViKiHlJ_O6HCQEOnFA_62XAdtU4HA/exec"; 
+
+            fetch(url, {
+                method: 'POST',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                showExportStatus('✅ Escala salva na planilha com sucesso!', 'success');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                setTimeout(resetForm, 3000);
+            })
+            .catch(error => {
+                showExportStatus('❌ Erro de conexão. Verifique sua internet.', 'error');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function resetForm() {
+            if (confirm('Tem certeza que deseja limpar todos os dados do formulário?')) {
+                // Limpar todos os campos
+                document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]').forEach(input => {
+                    input.value = '';
+                });
+                
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+
+                // Redefinir data e hora atuais
+                document.getElementById('evaluationDate').valueAsDate = new Date();
+                const now = new Date();
+                const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                                 now.getMinutes().toString().padStart(2, '0');
+                document.getElementById('evaluationTime').value = timeString;
+
+                // Remover todos os grupos musculares exceto o primeiro
+                const groupsContainer = document.getElementById('muscleGroupsContainer');
+                groupsContainer.innerHTML = '';
+                muscleGroupCount = 0;
+                
+                // Adicionar o primeiro grupo
+                addMuscleGroup();
+                
+                // Ocultar tabela de dados
+                document.getElementById('dataTableContainer').style.display = 'none';
+
+                // Atualizar pontuações e progresso
+                updateScores();
+                updateProgress();
+                updateSelectedOptions();
+                
+                // Esconder status de exportação
+                document.getElementById('exportStatus').style.display = 'none';
+            }
+        }
+
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            
+            // Se o valor contiver caracteres especiais, colocar entre aspas
+            if (/[",;\t\n]/.test(stringValue)) {
+                return `"${stringValue.replace(/"/g, '""')}"`;
+            }
+            return stringValue;
+        }
+
+        function exportData() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Por favor, preencha todos os campos obrigatórios antes de exportar.', 'error');
+                return;
+            }
+
+            // Adicionar o BOM (Byte Order Mark) para UTF-8
+            const BOM = "\uFEFF";
+            let csvContent = BOM;
+
+            // Construir cabeçalhos completos
+            const headers = EXPORT_FIELDS.map(field => escapeCSV(field.label));
+            
+            // Adicionar cabeçalhos para grupos musculares
+            muscleGroups.forEach(group => {
+                headers.push(escapeCSV(group.name));
+            });
+            
+            csvContent += headers.join(';') + '\r\n';
+            
+            // Construir linha de valores
+            const values = EXPORT_FIELDS.map(field => escapeCSV(getFieldValue(field)));
+            
+            // Adicionar valores numéricos para grupos musculares
+            muscleGroups.forEach(group => {
+                values.push(escapeCSV(group.value));
+            });
+            
+            csvContent += values.join(';') + '\r\n';
+            
+            // Criar e baixar arquivo CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            
+            // Gerar nome do arquivo: ID_Momento_Nome_Ashworth.csv
+            const patientId = document.getElementById('patientId').value || 'avaliacao';
+            const patientName = document.getElementById('patientName').value || 'paciente';
+            const evaluationMoment = document.getElementById('evaluationMoment').value || 'T0';
+            
+            const fileName = `${patientId}_${patientName}_${evaluationMoment}_Ashworth.csv`;
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showExportStatus('✅ Arquivo CSV gerado com sucesso!', 'success');
+        }
+
+        function showTable() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Por favor, preencha todos os campos obrigatórios antes de visualizar a tabela.', 'error');
+                return;
+            }
+
+            const tableHeader = document.getElementById('dataTableHeader');
+            const tableBody = document.getElementById('dataTableBody');
+            
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Criar linha de cabeçalhos
+            const headerRow = document.createElement('tr');
+            
+            // Adicionar cabeçalhos fixos
+            EXPORT_FIELDS.forEach(field => {
+                const th = document.createElement('th');
+                th.textContent = field.label;
+                headerRow.appendChild(th);
+            });
+            
+            // Adicionar cabeçalhos para grupos musculares
+            muscleGroups.forEach(group => {
+                const th = document.createElement('th');
+                th.textContent = group.name;
+                headerRow.appendChild(th);
+            });
+            
+            tableHeader.appendChild(headerRow);
+
+            // Criar linha de valores
+            const valueRow = document.createElement('tr');
+            
+            // Adicionar valores fixos
+            EXPORT_FIELDS.forEach(field => {
+                const td = document.createElement('td');
+                td.textContent = getFieldValue(field);
+                valueRow.appendChild(td);
+            });
+            
+            // Adicionar valores numéricos para grupos musculares
+            muscleGroups.forEach(group => {
+                const td = document.createElement('td');
+                td.textContent = group.value;
+                valueRow.appendChild(td);
+            });
+            
+            tableBody.appendChild(valueRow);
+
+            const tableContainer = document.getElementById('dataTableContainer');
+            tableContainer.style.display = 'block';
+
+            // Scroll para a tabela
+            tableContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyTableData() {
+            // Selecionar a segunda linha da tabela (a primeira linha de dados)
+            const dataRow = document.querySelector('#dataTable tbody tr');
+            if (!dataRow) {
+                showExportStatus('Nenhum dado disponível para copiar.', 'error');
+                return;
+            }
+
+            // Coletar os valores das células dessa linha
+            const cells = dataRow.querySelectorAll('td');
+            const values = Array.from(cells).map(cell => cell.textContent);
+            
+            // Juntar os valores com tabulação
+            const tsvContent = values.join('\t');
+            
+            // Copiar para área de transferência
+            navigator.clipboard.writeText(tsvContent)
+                .then(() => {
+                    const btn = document.querySelector('.copy-btn');
+                    btn.classList.add('copy-success');
+                    btn.innerHTML = '✓ Valores Copiados!';
+                    
+                    setTimeout(() => {
+                        btn.classList.remove('copy-success');
+                        btn.innerHTML = '📋 Copiar Valores';
+                    }, 2000);
+                })
+                .catch(err => {
+                    showExportStatus('Erro ao copiar: ' + err, 'error');
+                });
+        }
+    </script>
+</body>
+</html>
