@@ -671,7 +671,6 @@
             </div>
         </header>
         
-        <!-- Tabela de referência da escala -->
         <div class="section">
             <div class="section-header">
                 <div class="section-title">Classificação da Espasticidade</div>
@@ -778,7 +777,6 @@
             </div>
         </div>
         
-        <!-- Seção: Grupos Musculares -->
         <div class="section" id="muscleGroupsSection">
             <div class="section-header">
                 <div class="section-title">Grupos Musculares Avaliados</div>
@@ -786,30 +784,28 @@
             </div>
             
             <div id="muscleGroupsContainer">
-                <!-- Grupos musculares serão adicionados aqui -->
-            </div>
+                </div>
             
             <button class="add-group-btn" onclick="addMuscleGroup()">
                 ➕ Adicionar Grupo Muscular
             </button>
         </div>
         
-        <!-- Seção de Resumo -->
         <div class="totals-section">
             <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">
                 Resumo da Avaliação
             </h2>
             
             <div id="summaryResults">
-                <!-- Resultados serão inseridos aqui via JavaScript -->
-            </div>
+                </div>
         </div>
 
-        <!-- Status de Exportação -->
         <div class="export-status" id="exportStatus"></div>
 
-        <!-- Botões -->
         <div class="buttons">
+            <button class="btn" onclick="sendToSheets()" id="btnSubmit" style="background: #8e44ad; color: white;">
+                ☁️ Salvar na Planilha
+            </button>
             <button class="btn btn-success" onclick="exportData()">
                 💾 Baixar CSV
             </button>
@@ -821,24 +817,20 @@
             </button>
         </div>
 
-        <!-- Tabela de visualização de dados -->
         <div class="data-table-container" id="dataTableContainer">
             <h3>Dados da Avaliação - Escala de Ashworth</h3>
             <div class="table-responsive">
                 <table class="data-table" id="dataTable">
                     <thead id="dataTableHeader">
-                        <!-- Cabeçalhos serão inseridos aqui via JavaScript -->
-                    </thead>
+                        </thead>
                     <tbody id="dataTableBody">
-                        <!-- Valores serão inseridos aqui via JavaScript -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
             <div class="copy-instructions">
                 Selecione e copie os dados para colar em uma planilha
             </div>
             
-            <!-- Botões para tabela -->
             <div class="table-buttons">
                 <button class="copy-btn" onclick="copyTableData()">
                     📋 Copiar Valores
@@ -848,7 +840,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 Laboratório de Neurociência Aplicada - Escala Modificada de Ashworth</p>
+        <p>&copy; 2026 Laboratório de Neurociência Aplicada - Escala Modificada de Ashworth</p>
         <div class="references">
             <p>Bohannon, R. W., & Smith, M. B. (1987). Interrater reliability of a modified Ashworth scale of muscle spasticity. Physical therapy, 67(2), 206-207.</p>
         </div>
@@ -994,7 +986,7 @@
                 if (selectedRadio) {
                     displayValue = selectedRadio.value;
                     
-                    // CORREÇÃO: Converter para valor numérico conforme especificado
+                    // Converter para valor numérico conforme especificado
                     switch(displayValue) {
                         case '0': value = 0; break;
                         case '1': value = 1; break;
@@ -1118,6 +1110,111 @@
                 return element ? element.value : '';
             }
             return '';
+        }
+
+        function showExportStatus(message, type) {
+            const statusDiv = document.getElementById('exportStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `export-status export-${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // ---------- FUNÇÃO PARA ENVIAR PARA A PLANILHA DO GOOGLE ----------
+        function sendToSheets() {
+            if (!allFieldsFilled()) {
+                showExportStatus('Preencha todos os campos obrigatórios antes de enviar.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Enviando...';
+            btn.disabled = true;
+            showExportStatus('Enviando dados para a planilha...', 'success');
+
+            // 1. Coleta os cabeçalhos fixos (dados do paciente)
+            let headers = EXPORT_FIELDS.map(field => field.label);
+            let values = EXPORT_FIELDS.map(field => getFieldValue(field));
+
+            // 2. Coleta os cabeçalhos e valores dinâmicos dos grupos musculares adicionados
+            if (typeof muscleGroups !== 'undefined') {
+                muscleGroups.forEach(group => {
+                    headers.push(group.name); // Usa o nome que o aluno digitou (Ex: "Flexores de cotovelo")
+                    values.push(group.value); // Usa o valor numérico convertido
+                });
+            }
+
+            const payload = {
+                escala: document.title, // "Escala Modificada de Ashworth"
+                headers: headers,
+                values: values
+            };
+
+            // URL DA SUA PLANILHA APLICADA AQUI
+            const url = "https://script.google.com/macros/s/AKfycbzdAWqTlJqKJxOXduKZ2fpkoueWiZOdbDYwpdygvViKiHlJ_O6HCQEOnFA_62XAdtU4HA/exec"; 
+
+            fetch(url, {
+                method: 'POST',
+                redirect: 'follow',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                showExportStatus('✅ Escala salva na planilha com sucesso!', 'success');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                setTimeout(resetForm, 3000);
+            })
+            .catch(error => {
+                showExportStatus('❌ Erro de conexão. Verifique sua internet.', 'error');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function resetForm() {
+            if (confirm('Tem certeza que deseja limpar todos os dados do formulário?')) {
+                // Limpar todos os campos
+                document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]').forEach(input => {
+                    input.value = '';
+                });
+                
+                document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = false;
+                });
+
+                // Redefinir data e hora atuais
+                document.getElementById('evaluationDate').valueAsDate = new Date();
+                const now = new Date();
+                const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                                 now.getMinutes().toString().padStart(2, '0');
+                document.getElementById('evaluationTime').value = timeString;
+
+                // Remover todos os grupos musculares exceto o primeiro
+                const groupsContainer = document.getElementById('muscleGroupsContainer');
+                groupsContainer.innerHTML = '';
+                muscleGroupCount = 0;
+                
+                // Adicionar o primeiro grupo
+                addMuscleGroup();
+                
+                // Ocultar tabela de dados
+                document.getElementById('dataTableContainer').style.display = 'none';
+
+                // Atualizar pontuações e progresso
+                updateScores();
+                updateProgress();
+                updateSelectedOptions();
+                
+                // Esconder status de exportação
+                document.getElementById('exportStatus').style.display = 'none';
+            }
         }
 
         function escapeCSV(value) {
@@ -1270,56 +1367,6 @@
                 .catch(err => {
                     showExportStatus('Erro ao copiar: ' + err, 'error');
                 });
-        }
-
-        function showExportStatus(message, type) {
-            const statusDiv = document.getElementById('exportStatus');
-            statusDiv.textContent = message;
-            statusDiv.className = `export-status export-${type}`;
-            statusDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        function resetForm() {
-            if (confirm('Tem certeza que deseja limpar todos os dados do formulário?')) {
-                // Limpar todos os campos
-                document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"]').forEach(input => {
-                    input.value = '';
-                });
-                
-                document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                    radio.checked = false;
-                });
-
-                // Redefinir data e hora atuais
-                document.getElementById('evaluationDate').valueAsDate = new Date();
-                const now = new Date();
-                const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
-                                 now.getMinutes().toString().padStart(2, '0');
-                document.getElementById('evaluationTime').value = timeString;
-
-                // Remover todos os grupos musculares exceto o primeiro
-                const groupsContainer = document.getElementById('muscleGroupsContainer');
-                groupsContainer.innerHTML = '';
-                muscleGroupCount = 0;
-                
-                // Adicionar o primeiro grupo
-                addMuscleGroup();
-                
-                // Ocultar tabela de dados
-                document.getElementById('dataTableContainer').style.display = 'none';
-
-                // Atualizar pontuações e progresso
-                updateScores();
-                updateProgress();
-                updateSelectedOptions();
-                
-                // Esconder status de exportação
-                document.getElementById('exportStatus').style.display = 'none';
-            }
         }
     </script>
 </body>
