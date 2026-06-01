@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Identificação - Projeto COMPARE</title>
+    <style>
+        :root {
+            --primary: #006064;
+            --secondary: #0097a7;
+            --accent: #f57c00;
+            --light: #e0f7fa;
+            --dark: #00363a;
+            --success: #2e7d32;
+            --bg-color: #f5f7fa;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #e4e7eb 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: white;
+            color: var(--primary);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .logo { font-weight: bold; font-size: 1.5rem; color: var(--primary); margin-bottom: 10px; }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: var(--light);
+            color: var(--secondary);
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .back-link:hover { background: var(--secondary); color: white; }
+        
+        .section { padding: 25px; border-bottom: 1px solid #eee; }
+        .section-header {
+            background: var(--dark); color: white; padding: 12px 20px;
+            border-radius: 8px; margin-bottom: 20px; font-weight: bold;
+        }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--dark); font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit;
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        
+        .radio-group, .checkbox-group {
+            display: flex; flex-wrap: wrap; gap: 15px; padding: 10px;
+            background: #f8f9fa; border-radius: 8px; border: 1px solid #eee;
+        }
+        .radio-option { display: flex; align-items: center; cursor: pointer; }
+        .radio-option input { margin-right: 8px; transform: scale(1.2); }
+        
+        .conditional-box {
+            margin-top: 10px; padding: 15px; background: var(--light);
+            border-left: 4px solid var(--secondary); border-radius: 0 8px 8px 0; display: none;
+        }
+        
+        .buttons { display: flex; justify-content: center; gap: 15px; padding: 30px; flex-wrap: wrap; }
+        .btn { padding: 12px 25px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-submit { background: #8e44ad; }
+        .btn-success { background: var(--success); }
+        .btn-table { background: var(--secondary); }
+        .btn-reset { background: #e74c3c; }
+
+        .data-table-container { display: none; margin: 30px; overflow-x: auto; background: white; padding: 20px; border-radius: 10px; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-table th, .data-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        .data-table th { background: var(--secondary); color: white; }
+        
+        @media (max-width: 768px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Laboratório de Neurociência Aplicada (LANA) - UFPE</div>
+            <h1>Ficha de Identificação</h1>
+            <h2>Projeto COMPARE</h2>
+            <a href="index.html" class="back-link">⬅ Voltar ao Painel Inicial</a>
+        </header>
+        
+        <form id="compareForm">
+            <div class="section">
+                <div class="section-header">1. Informações do Registro</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Data de Preenchimento:</label>
+                        <input type="date" id="data_registro" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Situação no Projeto:</label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="status" value="Incluído" onchange="toggleStatus()"> INCLUÍDO</label>
+                        <label class="radio-option"><input type="radio" name="status" value="Excluído" onchange="toggleStatus()"> EXCLUÍDO</label>
+                    </div>
+                </div>
+                
+                <div id="box_incluido" class="conditional-box grid-2">
+                    <div class="form-group"><label>Projeto:</label><input type="text" id="projeto_nome"></div>
+                    <div class="form-group"><label>Identificação Nº:</label><input type="text" id="id_numero"></div>
+                </div>
+                
+                <div id="box_excluido" class="conditional-box">
+                    <div class="form-group"><label>Motivo da Exclusão:</label><input type="text" id="motivo_exclusao"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">2. Dados Pessoais</div>
+                <div class="form-group"><label>Nome Completo:</label><input type="text" id="nome_paciente" required></div>
+                
+                <div class="grid-4">
+                    <div class="form-group"><label>Data de Nasc.:</label><input type="date" id="data_nasc" onchange="calcularIdade()"></div>
+                    <div class="form-group"><label>Idade:</label><input type="number" id="idade" readonly style="background:#eee"></div>
+                    <div class="form-group">
+                        <label>Sexo:</label>
+                        <select id="sexo">
+                            <option value="">Selecione...</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Peso (kg):</label><input type="number" step="0.1" id="peso"></div>
+                    <div class="form-group"><label>Altura (m):</label><input type="number" step="0.01" id="altura"></div>
+                    <div class="form-group"><label>Est. Civil:</label><input type="text" id="estado_civil"></div>
+                    <div class="form-group"><label>Nacionalidade:</label><input type="text" id="nacionalidade" value="Brasileira"></div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group"><label>Bairro / Cidade:</label><input type="text" id="endereco"></div>
+                    <div class="form-group"><label>Telefones:</label><input type="text" id="telefones" placeholder="(DDD) XXXXX-XXXX"></div>
+                    <div class="form-group"><label>Escolaridade:</label><input type="text" id="escolaridade"></div>
+                    <div class="form-group"><label>Profissão:</label><input type="text" id="profissao"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Responsáveis / Contatos para emergência:</label>
+                    <input type="text" id="contato_emergencia">
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">3. Dados Terapêuticos</div>
+                
+                <div class="grid-2">
+                    <div class="form-group"><label>Acompanhamento Médico:</label><input type="text" id="acomp_medico"></div>
+                    <div class="form-group">
+                        <label>Encaminhamento:</label>
+                        <div class="radio-group" style="margin-bottom:5px;">
+                            <label class="radio-option"><input type="radio" name="encaminhamento" value="Não"> Não</label>
+                            <label class="radio-option"><input type="radio" name="encaminhamento" value="Sim"> Sim</label>
+                        </div>
+                        <input type="text" id="encaminhamento_quem" placeholder="Se SIM, quem?">
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group"><label>Diagnóstico Clínico:</label><input type="text" id="diag_clinico"></div>
+                    <div class="form-group"><label>Tempo de Diagnóstico:</label><input type="text" id="tempo_diag"></div>
+                </div>
+                
+                <div class="form-group"><label>HD (História da Doença):</label><textarea id="historico_doenca"></textarea></div>
+                <div class="form-group"><label>Exame de Imagem / Achados Relevantes:</label><textarea id="exames_imagem"></textarea></div>
+                
+                <div class="form-group">
+                    <label>Realiza Fisioterapia?</label>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="fisio" value="Não"> Não</label>
+                        <label class="radio-option"><input type="radio" name="fisio" value="Já fez"> Já fez</label>
+                        <label class="radio-option"><input type="radio" name="fisio" value="Sim"> Sim</label>
+                    </div>
+                    <div class="grid-2" style="margin-top:10px;">
+                        <input type="text" id="fisio_freq" placeholder="Quantas vezes por semana?">
+                        <input type="text" id="fisio_tempo" placeholder="Há quanto tempo?">
+                    </div>
+                </div>
+                
+                <div class="form-group"><label>Medicamentos (quais e horários):</label><textarea id="medicamentos"></textarea></div>
+                
+                <div class="form-group">
+                    <label>Comorbidades:</label>
+                    <div class="checkbox-group">
+                        <label class="radio-option"><input type="checkbox" name="comorbidades" value="HAS"> HAS</label>
+                        <label class="radio-option"><input type="checkbox" name="comorbidades" value="Diabetes"> DIABETES</label>
+                        <label class="radio-option"><input type="checkbox" name="comorbidades" value="Labirintite"> LABIRINTITE</label>
+                        <label class="radio-option"><input type="checkbox" name="comorbidades" value="Outras"> OUTRAS</label>
+                    </div>
+                    <input type="text" id="comorbidades_outras" placeholder="Quais outras?" style="margin-top:10px;">
+                </div>
+                
+                <div class="form-group">
+                    <label>Já foi submetido a alguma técnica de estimulação cerebral não invasiva?</label>
+                    <div class="radio-group" style="margin-bottom:5px;">
+                        <label class="radio-option"><input type="radio" name="estimulacao" value="Não"> Não</label>
+                        <label class="radio-option"><input type="radio" name="estimulacao" value="Sim"> Sim</label>
+                    </div>
+                    <input type="text" id="estimulacao_qual" placeholder="Se SIM, qual e há quanto tempo?" style="margin-top:5px;">
+                </div>
+            </div>
+            
+            <div class="section" style="background: var(--light); text-align: center;">
+                <div class="form-group" style="max-width: 400px; margin: 0 auto;">
+                    <label>Profissional Responsável:</label>
+                    <input type="text" id="profissional_resp" value="Gabriel Barreto Antonino" style="text-align: center; font-weight: bold;">
+                </div>
+            </div>
+        </form>
+
+        <div class="buttons">
+            <button class="btn btn-submit" onclick="sendToSheets()">☁️ Salvar na Planilha</button>
+            <button class="btn btn-success" onclick="exportCSV()">💾 Baixar CSV</button>
+            <button class="btn btn-table" onclick="showTable()">📊 Mostrar Tabela</button>
+            <button class="btn btn-reset" onclick="resetForm()">🔄 Limpar</button>
+        </div>
+
+        <div class="data-table-container" id="dataTableContainer">
+            <h3>Resumo dos Dados</h3>
+            <table class="data-table" id="dataTable">
+                <thead id="dataTableHeader"></thead>
+                <tbody id="dataTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('data_registro').valueAsDate = new Date();
+
+        function toggleStatus() {
+            const status = document.querySelector('input[name="status"]:checked')?.value;
+            document.getElementById('box_incluido').style.display = status === 'Incluído' ? 'grid' : 'none';
+            document.getElementById('box_excluido').style.display = status === 'Excluído' ? 'block' : 'none';
+        }
+
+        function calcularIdade() {
+            const nasc = new Date(document.getElementById('data_nasc').value);
+            const hoje = new Date();
+            let idade = hoje.getFullYear() - nasc.getFullYear();
+            const m = hoje.getMonth() - nasc.getMonth();
+            if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
+            document.getElementById('idade').value = isNaN(idade) ? '' : idade;
+        }
+
+        const EXPORT_FIELDS = [
+            { id: 'data_registro', label: 'Data' },
+            { name: 'status', label: 'Situação', isRadio: true },
+            { id: 'projeto_nome', label: 'Projeto' },
+            { id: 'id_numero', label: 'Nº Identificação' },
+            { id: 'motivo_exclusao', label: 'Motivo Exclusão' },
+            { id: 'nome_paciente', label: 'Nome' },
+            { id: 'data_nasc', label: 'Data Nasc.' },
+            { id: 'idade', label: 'Idade' },
+            { id: 'sexo', label: 'Sexo' },
+            { id: 'peso', label: 'Peso' },
+            { id: 'altura', label: 'Altura' },
+            { id: 'estado_civil', label: 'Est. Civil' },
+            { id: 'endereco', label: 'Endereço/Cidade' },
+            { id: 'telefones', label: 'Telefones' },
+            { id: 'nacionalidade', label: 'Nacionalidade' },
+            { id: 'escolaridade', label: 'Escolaridade' },
+            { id: 'profissao', label: 'Profissão' },
+            { id: 'contato_emergencia', label: 'Emergência' },
+            { id: 'acomp_medico', label: 'Acomp. Médico' },
+            { name: 'encaminhamento', label: 'Teve Encaminhamento?', isRadio: true },
+            { id: 'encaminhamento_quem', label: 'Encaminhado por' },
+            { id: 'diag_clinico', label: 'Diag. Clínico' },
+            { id: 'tempo_diag', label: 'Tempo Diag.' },
+            { id: 'historico_doenca', label: 'HD' },
+            { id: 'exames_imagem', label: 'Exames Imagem' },
+            { name: 'fisio', label: 'Faz Fisio?', isRadio: true },
+            { id: 'fisio_freq', label: 'Freq. Fisio' },
+            { id: 'fisio_tempo', label: 'Tempo Fisio' },
+            { id: 'medicamentos', label: 'Medicamentos' },
+            { name: 'comorbidades', label: 'Comorbidades', isCheckbox: true },
+            { id: 'comorbidades_outras', label: 'Outras Comorb.' },
+            { name: 'estimulacao', label: 'Estimulação Cerebral?', isRadio: true },
+            { id: 'estimulacao_qual', label: 'Detalhes Estimulação' },
+            { id: 'profissional_resp', label: 'Profissional' }
+        ];
+
+        function getFieldValue(field) {
+            if (field.isRadio) {
+                const checked = document.querySelector(`input[name="${field.name}"]:checked`);
+                return checked ? checked.value : '';
+            }
+            if (field.isCheckbox) {
+                const checked = document.querySelectorAll(`input[name="${field.name}"]:checked`);
+                return Array.from(checked).map(cb => cb.value).join(', ');
+            }
+            const el = document.getElementById(field.id);
+            return el ? el.value : '';
+        }
+
+        function buildPayload() {
+            const data = {};
+            EXPORT_FIELDS.forEach(f => { data[f.label] = getFieldValue(f); });
+            return data;
+        }
+
+        function escapeCSV(value) {
+            if (!value) return '';
+            const str = String(value);
+            return /[",;\\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+        }
+
+        function exportCSV() {
+            const payload = buildPayload();
+            const BOM = "\\uFEFF";
+            let csv = BOM;
+            
+            const headers = Object.keys(payload);
+            csv += headers.map(escapeCSV).join(';') + '\\r\\n';
+            csv += headers.map(h => escapeCSV(payload[h])).join(';') + '\\r\\n';
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            const nome = document.getElementById('nome_paciente').value || 'Paciente';
+            link.href = URL.createObjectURL(blob);
+            link.download = `COMPARE_${nome}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function showTable() {
+            const payload = buildPayload();
+            const thead = document.getElementById('dataTableHeader');
+            const tbody = document.getElementById('dataTableBody');
+            
+            thead.innerHTML = ''; tbody.innerHTML = '';
+            
+            const headers = Object.keys(payload);
+            const trHead = document.createElement('tr');
+            const trBody = document.createElement('tr');
+            
+            headers.forEach(h => {
+                const th = document.createElement('th'); th.textContent = h; trHead.appendChild(th);
+                const td = document.createElement('td'); td.textContent = payload[h]; trBody.appendChild(td);
+            });
+            
+            thead.appendChild(trHead);
+            tbody.appendChild(trBody);
+            
+            document.getElementById('dataTableContainer').style.display = 'block';
+        }
+
+        function sendToSheets() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Enviando...';
+            
+            const payloadData = buildPayload();
+            const payload = {
+                escala: "Ficha_COMPARE",
+                headers: Object.keys(payloadData),
+                values: Object.values(payloadData)
+            };
+
+            const url = "COLOQUE_SEU_LINK_AQUI"; 
+
+            fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                alert('✅ Dados enviados para a planilha!');
+                btn.innerHTML = originalText;
+            }).catch(() => {
+                alert('❌ Erro de conexão.');
+                btn.innerHTML = originalText;
+            });
+        }
+
+        function resetForm() {
+            if(confirm('Limpar todos os campos?')) {
+                document.getElementById('compareForm').reset();
+                document.getElementById('data_registro').valueAsDate = new Date();
+                toggleStatus();
+                document.getElementById('dataTableContainer').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
