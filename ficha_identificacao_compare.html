@@ -391,11 +391,11 @@
                 values: Object.values(payloadData)
             };
 
-            const url = "COLOQUE_SEU_LINK_AQUI"; 
+            const url = "https://script.google.com/macros/s/AKfycbzdAWqTlJqKJxOXduKZ2fpkoueWiZOdbDYwpdygvViKiHlJ_O6HCQEOnFA_62XAdtU4HA/exec"; 
 
             fetch(url, {
                 method: 'POST',
-                mode: 'no-cors',
+                mode: 'no-cors', 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
