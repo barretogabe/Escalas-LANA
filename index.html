@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Escalas Clínicas - LANA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            text-align: center;
+        }
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-bottom: 5px solid #3498db;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.8;
+        }
+        .menu {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .scale-btn {
+            display: block;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+            background: #f8f9fa;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        .scale-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        /* Cores de identificação visual para cada escala */
+        .btn-fma { border-left: 8px solid #3498db; }
+        .btn-mif { border-left: 8px solid #b21f1f; }
+        .btn-mas { border-left: 8px solid #e67e22; }
+        .btn-sf36 { border-left: 8px solid #27ae60; }
+        .btn-sis { border-left: 8px solid #8e44ad; }
+        .btn-ssqol { border-left: 8px solid #16a085; }
+        .btn-bbt { border-left: 8px solid #6c3483; } /* Cor roxa para o BBT */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Laboratório de Neurociência Aplicada</h1>
+            <p>Selecione a escala para iniciar a avaliação clínica</p>
+        </div>
+
+        <div class="menu">
+            <a href="fma_UE_com_planilha.html" class="scale-btn btn-fma">
+                Escala Fugl-Meyer (Membro Superior)
+            </a>
+            <a href="IFM_final.html" class="scale-btn btn-mif">
+                Medida de Independência Funcional (MIF)
+            </a>
+            <a href="MAS_final.html" class="scale-btn btn-mas">
+                Escala Modificada de Ashworth
+            </a>
+            <a href="sf_36_final.html" class="scale-btn btn-sf36">
+                Questionário de Qualidade de Vida (SF-36)
+            </a>
+            <a href="SIS_final.html" class="scale-btn btn-sis">
+                Stroke Impact Scale (SIS)
+            </a>
+            <a href="SS_QOL_final.html" class="scale-btn btn-ssqol">
+                Stroke Specific Quality of Life (SS-QOL)
+            </a>
+            <a href="BBT_final.html" class="scale-btn btn-bbt">
+                Box and Blocks Test (BBT)
+            </a>
+        </div>
+    </div>
+</body>
+</html>
