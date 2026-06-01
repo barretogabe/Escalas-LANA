@@ -62,13 +62,14 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
         /* Cores de identificação visual para cada escala */
+        .btn-compare { border-left: 8px solid #0097a7; } /* Cor teal para a identificação */
         .btn-fma { border-left: 8px solid #3498db; }
         .btn-mif { border-left: 8px solid #b21f1f; }
         .btn-mas { border-left: 8px solid #e67e22; }
         .btn-sf36 { border-left: 8px solid #27ae60; }
         .btn-sis { border-left: 8px solid #8e44ad; }
         .btn-ssqol { border-left: 8px solid #16a085; }
-        .btn-bbt { border-left: 8px solid #6c3483; } /* Cor roxa para o BBT */
+        .btn-bbt { border-left: 8px solid #6c3483; } 
     </style>
 </head>
 <body>
@@ -79,6 +80,11 @@
         </div>
 
         <div class="menu">
+            <!-- Ficha de Identificação adicionada no topo -->
+            <a href="ficha_identificacao_compare.html" class="scale-btn btn-compare">
+                Ficha de Identificação (Projeto COMPARE)
+            </a>
+            
             <a href="fma_UE_com_planilha.html" class="scale-btn btn-fma">
                 Escala Fugl-Meyer (Membro Superior)
             </a>
